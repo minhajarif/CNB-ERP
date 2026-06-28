@@ -1,14 +1,15 @@
-import MainLayout from "../../layouts/MainLayout";
 
-const Attendance = () => {
+import SupervisorLayout from "../../layouts/SupervisorLayout";
+
+const SupervisorAttendance = () => {
   return (
-    <MainLayout>
+    <SupervisorLayout>
 
       <h1 className="text-3xl font-bold mb-6">
         Attendance Management
       </h1>
 
-      {/* Stats Cards */}
+      {/* Summary Cards */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
@@ -18,7 +19,7 @@ const Attendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            118
+            32
           </h1>
         </div>
 
@@ -28,7 +29,7 @@ const Attendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            7
+            3
           </h1>
         </div>
 
@@ -38,7 +39,7 @@ const Attendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            4
+            2
           </h1>
         </div>
 
@@ -48,27 +49,27 @@ const Attendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            125
+            35
           </h1>
         </div>
 
       </div>
 
-      {/* Filters */}
+      {/* Attendance Entry */}
 
-      <div className="bg-white rounded-xl shadow p-5 mb-8">
+      <div className="bg-white rounded-xl shadow p-5 mb-6">
 
         <h2 className="text-xl font-semibold mb-4">
-          Attendance Filters
+          Mark Attendance
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-          <input
-            type="text"
-            placeholder="Search Labour..."
-            className="border p-3 rounded-lg"
-          />
+          <select className="border p-3 rounded-lg">
+            <option>Select Labour</option>
+            <option>Rahman</option>
+            <option>Ahmed</option>
+          </select>
 
           <input
             type="date"
@@ -76,7 +77,6 @@ const Attendance = () => {
           />
 
           <select className="border p-3 rounded-lg">
-            <option>All Status</option>
             <option>Present</option>
             <option>Absent</option>
             <option>Late</option>
@@ -84,9 +84,13 @@ const Attendance = () => {
 
         </div>
 
+        <button className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg">
+          Save Attendance
+        </button>
+
       </div>
 
-      {/* Attendance Table */}
+      {/* Attendance Records */}
 
       <div className="bg-white rounded-xl shadow p-5">
 
@@ -102,12 +106,9 @@ const Attendance = () => {
 
               <tr className="border-b">
 
-                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Labour</th>
                 <th className="p-3 text-left">Department</th>
                 <th className="p-3 text-left">Date</th>
-                <th className="p-3 text-left">Login</th>
-                <th className="p-3 text-left">Logout</th>
-                <th className="p-3 text-left">Hours</th>
                 <th className="p-3 text-left">Status</th>
                 <th className="p-3 text-left">Action</th>
 
@@ -122,9 +123,6 @@ const Attendance = () => {
                 <td className="p-3">Rahman</td>
                 <td className="p-3">Stitching</td>
                 <td className="p-3">12-06-2026</td>
-                <td className="p-3">09:00 AM</td>
-                <td className="p-3">06:00 PM</td>
-                <td className="p-3">9 Hours</td>
 
                 <td className="p-3">
                   <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
@@ -135,11 +133,11 @@ const Attendance = () => {
                 <td className="p-3">
                   <div className="flex gap-2">
 
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                    <button className="bg-blue-600 text-white px-3 py-2 rounded-lg">
                       View
                     </button>
 
-                    <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg">
+                    <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
                       Edit
                     </button>
 
@@ -151,26 +149,23 @@ const Attendance = () => {
               <tr>
 
                 <td className="p-3">Ahmed</td>
-                <td className="p-3">Packing</td>
+                <td className="p-3">Stitching</td>
                 <td className="p-3">12-06-2026</td>
-                <td className="p-3">09:40 AM</td>
-                <td className="p-3">06:00 PM</td>
-                <td className="p-3">8.2 Hours</td>
 
                 <td className="p-3">
-                  <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                    Late
+                  <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                    Absent
                   </span>
                 </td>
 
                 <td className="p-3">
                   <div className="flex gap-2">
 
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                    <button className="bg-blue-600 text-white px-3 py-2 rounded-lg">
                       View
                     </button>
 
-                    <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg">
+                    <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
                       Edit
                     </button>
 
@@ -187,8 +182,8 @@ const Attendance = () => {
 
       </div>
 
-    </MainLayout>
+    </SupervisorLayout>
   );
 };
 
-export default Attendance;
+export default SupervisorAttendance;

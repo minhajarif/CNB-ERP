@@ -1,169 +1,503 @@
+import { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
+import { Link } from "react-router-dom";
 
-const Production = () => {
-  return (
-    <MainLayout>
+const Production = () => { 
+  
+const [showModal, setShowModal] = useState(false);
 
-      <h1 className="text-3xl font-bold mb-6">
-        Production Management
-      </h1>
+const [productions, setProductions] = useState([]);
 
-      {/* Summary Cards */}
+const [editIndex, setEditIndex] = useState(null);
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+const [search, setSearch] = useState("");
 
-        <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Today's Production
-          </h3>
+const [formData, setFormData] = useState({
+  labour: "",
+  department: "",
+  workType: "",
+  quantity: "",
+  rate: "",
+  date: "",
+  image: "",
+  status: "Completed",
+});
 
-          <h1 className="text-4xl font-bold mt-2">
-            850
-          </h1>
-        </div>
+const filteredProductions = productions.filter((item) =>
+  item.labour.toLowerCase().includes(search.toLowerCase()) ||
+  item.department.toLowerCase().includes(search.toLowerCase()) ||
+  item.workType.toLowerCase().includes(search.toLowerCase())
+);
 
-        <div className="bg-green-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Total Amount
-          </h3>
+const handleSaveProduction = () => {
 
-          <h1 className="text-4xl font-bold mt-2">
-            ₹18,500
-          </h1>
-        </div>
+  if (
+    !formData.labour ||
+    !formData.department ||
+    !formData.workType ||
+    !formData.quantity ||
+    !formData.rate ||
+    !formData.date
+  ) {
+    alert("Please fill all fields");
+    return;
+  }
 
-        <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Active Workers
-          </h3>
+  if (editIndex !== null) {
 
-          <h1 className="text-4xl font-bold mt-2">
-            72
-          </h1>
+    const updatedProductions = [...productions];
+
+    updatedProductions[editIndex] = formData;
+
+    setProductions(updatedProductions);
+
+    setEditIndex(null);
+
+  } else {
+
+    setProductions([
+      ...productions,
+      formData,
+    ]);
+
+  }
+
+  setFormData({
+    labour: "",
+    department: "",
+    workType: "",
+    quantity: "",
+    rate: "",
+    date: "",
+    image: "",
+    status: "Completed",
+  });
+
+  setShowModal(false);
+
+};
+
+const handleDeleteProduction = (index) => {
+
+  setProductions(
+    productions.filter((_, i) => i !== index)
+  );
+
+};
+
+const handleEditProduction = (index) => {
+
+  setFormData(productions[index]);
+
+  setEditIndex(index);
+
+  setShowModal(true);
+
+};
+return (
+  <MainLayout>
+
+    {/* Header */}
+
+    <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+
+      <div>
+
+        <h1 className="text-3xl font-bold">
+          Production Management
+        </h1>
+
+        <p className="text-gray-500 mt-1">
+          Manage Daily Production Entries
+        </p>
+
+      </div>
+
+      <button
+        onClick={() => setShowModal(true)}
+        className="bg-blue-700 hover:bg-blue-800 text-white px-5 py-3 rounded-xl shadow"
+      >
+        + Add Production
+      </button>
+
+    </div>
+
+    {/* Summary Cards */}
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+      <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
+
+        <h3 className="text-lg">
+          Total Entries
+        </h3>
+
+        <h1 className="text-4xl font-bold mt-2">
+          {productions.length}
+        </h1>
+
+      </div>
+
+      <div className="bg-green-600 text-white p-5 rounded-xl shadow">
+
+        <h3 className="text-lg">
+          Total Quantity
+        </h3>
+
+        <h1 className="text-4xl font-bold mt-2">
+          {productions.reduce(
+            (total, item) => total + Number(item.quantity),
+            0
+          )}
+        </h1>
+
+      </div>
+
+      <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
+
+        <h3 className="text-lg">
+          Total Amount
+        </h3>
+
+        <h1 className="text-4xl font-bold mt-2">
+          ₹
+          {productions.reduce(
+            (total, item) =>
+              total +
+              Number(item.quantity) *
+                Number(item.rate),
+            0
+          )}
+        </h1>
+
+      </div>
+
+    </div>
+
+    {/* Search */}
+
+    <div className="bg-white rounded-xl shadow p-5 mb-6">
+
+      <input
+        type="text"
+        placeholder="Search Production..."
+        value={search}
+        onChange={(e) =>
+          setSearch(e.target.value)
+        }
+        className="w-full border p-3 rounded-lg"
+      />
+
+    </div>
+
+    {/* Modal */}
+
+    {showModal && (
+
+      <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+
+        <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl p-6">
+
+          <div className="flex justify-between items-center mb-5">
+
+            <h2 className="text-2xl font-bold">
+
+              {editIndex !== null
+                ? "Update Production"
+                : "Add Production"}
+
+            </h2>
+
+            <button
+              onClick={() =>
+                setShowModal(false)
+              }
+              className="text-3xl"
+            >
+              ×
+            </button>
+
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <select
+    value={formData.labour}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        labour: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  >
+    <option value="">Select Labour</option>
+    <option value="Rahman">Rahman</option>
+    <option value="Ahmed">Ahmed</option>
+    <option value="Aslam">Aslam</option>
+  </select>
+
+  <select
+    value={formData.department}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        department: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  >
+    <option value="">Select Department</option>
+    <option value="Stitching">Stitching</option>
+    <option value="Packing">Packing</option>
+    <option value="Finishing">Finishing</option>
+  </select>
+
+  <input
+    type="text"
+    placeholder="Work Type"
+    value={formData.workType}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        workType: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  />
+
+  <input
+    type="number"
+    placeholder="Production Quantity"
+    value={formData.quantity}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        quantity: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  />
+
+  <input
+    type="number"
+    placeholder="Piece Rate (₹)"
+    value={formData.rate}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        rate: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  />
+
+  <input
+    type="number"
+    value={
+      formData.quantity && formData.rate
+        ? Number(formData.quantity) * Number(formData.rate)
+        : ""
+    }
+    readOnly
+    placeholder="Total Amount"
+    className="border p-3 rounded-lg bg-gray-100"
+  />
+
+  <input
+    type="date"
+    value={formData.date}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        date: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  />
+
+  <select
+    value={formData.status}
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        status: e.target.value,
+      })
+    }
+    className="border p-3 rounded-lg"
+  >
+    <option value="Completed">Completed</option>
+    <option value="Pending">Pending</option>
+    <option value="Rejected">Rejected</option>
+  </select>
+
+  <input
+    type="file"
+    onChange={(e) =>
+      setFormData({
+        ...formData,
+        image: e.target.files[0],
+      })
+    }
+    className="border p-3 rounded-lg md:col-span-2"
+  />
+
+</div>
+          <div className="flex justify-end gap-3 mt-6">
+
+            <button
+              onClick={() => setShowModal(false)}
+              className="px-5 py-3 bg-gray-300 rounded-lg"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={handleSaveProduction}
+              className="px-5 py-3 bg-blue-700 text-white rounded-lg"
+            >
+              {editIndex !== null
+                ? "Update Production"
+                : "Save Production"}
+            </button>
+
+          </div>
+
         </div>
 
       </div>
 
-      {/* Production Entry Form */}
+    )}
 
-      <div className="bg-white rounded-xl shadow p-5 mb-6">
+    {/* Production Table */}
 
-        <h2 className="text-xl font-semibold mb-4">
-          Add Production Entry
-        </h2>
+    <div className="bg-white rounded-2xl shadow p-5">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="overflow-x-auto">
 
-          <select className="border p-3 rounded-lg">
-            <option>Select Labour</option>
-            <option>Rahman</option>
-            <option>Ahmed</option>
-          </select>
+        <table className="w-full">
 
-          <select className="border p-3 rounded-lg">
-            <option>Select Department</option>
-            <option>Stitching</option>
-            <option>Packing</option>
-          </select>
+          <thead>
 
-          <input
-            type="text"
-            placeholder="Work Type"
-            className="border p-3 rounded-lg"
-          />
+            <tr className="border-b bg-gray-100">
 
-          <input
-            type="number"
-            placeholder="Quantity"
-            className="border p-3 rounded-lg"
-          />
+              <th className="p-3 text-left">Labour</th>
+              <th className="p-3 text-left">Department</th>
+              <th className="p-3 text-left">Work</th>
+              <th className="p-3 text-left">Qty</th>
+              <th className="p-3 text-left">Rate</th>
+              <th className="p-3 text-left">Amount</th>
+              <th className="p-3 text-left">Date</th>
+              <th className="p-3 text-left">Action</th>
 
-          <input
-            type="number"
-            placeholder="Piece Rate"
-            className="border p-3 rounded-lg"
-          />
+            </tr>
 
-          <input
-            type="date"
-            className="border p-3 rounded-lg"
-          />
+          </thead>
 
-          <input
-            type="file"
-            className="border p-3 rounded-lg md:col-span-2"
-          />
+          <tbody>
+            {filteredProductions.length > 0 ? (
 
-        </div>
+              filteredProductions.map((item, index) => (
 
-        <button className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg">
-          Save Production
-        </button>
+                <tr
+                  key={index}
+                  className="border-b hover:bg-gray-50"
+                >
 
-      </div>
+                  <td className="p-3">
+                    {item.labour}
+                  </td>
 
-      {/* Production History */}
+                  <td className="p-3">
+                    {item.department}
+                  </td>
 
-      <div className="bg-white rounded-xl shadow p-4">
+                  <td className="p-3">
+                    {item.workType}
+                  </td>
 
-        <h2 className="text-xl font-semibold mb-4">
-          Production History
-        </h2>
+                  <td className="p-3">
+                    {item.quantity}
+                  </td>
 
-        <div className="overflow-x-auto">
+                  <td className="p-3">
+                    ₹{item.rate}
+                  </td>
 
-          <table className="w-full">
+                  <td className="p-3 font-semibold">
+                    ₹
+                    {Number(item.quantity) *
+                     Number(item.rate)}
+                  </td>
 
-            <thead>
-              <tr className="border-b">
+                  <td className="p-3">
+                    {item.date}
+                  </td>
 
-                <th className="p-3 text-left">Labour</th>
-                <th className="p-3 text-left">Department</th>
-                <th className="p-3 text-left">Work Type</th>
-                <th className="p-3 text-left">Quantity</th>
-                <th className="p-3 text-left">Rate</th>
-                <th className="p-3 text-left">Amount</th>
-                <th className="p-3 text-left">Date</th>
+                  <td className="p-3">
 
-              </tr>
-            </thead>
+                    <div className="flex gap-2">
 
-            <tbody>
+                      <Link
+                        to="/owner/production-details"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg"
+                      >
+                        View
+                      </Link>
 
-              <tr className="border-b">
+                      <button
+                        onClick={() =>
+                          handleEditProduction(index)
+                        }
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg"
+                      >
+                        Edit
+                      </button>
 
-                <td className="p-3">Rahman</td>
-                <td className="p-3">Stitching</td>
-                <td className="p-3">Wallet</td>
-                <td className="p-3">50</td>
-                <td className="p-3">₹10</td>
-                <td className="p-3">₹500</td>
-                <td className="p-3">12-06-2026</td>
+                      <button
+                        onClick={() =>
+                          handleDeleteProduction(index)
+                        }
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg"
+                      >
+                        Delete
+                      </button>
 
-              </tr>
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              ))
+
+            ) : (
 
               <tr>
 
-                <td className="p-3">Ahmed</td>
-                <td className="p-3">Packing</td>
-                <td className="p-3">Box Packing</td>
-                <td className="p-3">100</td>
-                <td className="p-3">₹5</td>
-                <td className="p-3">₹500</td>
-                <td className="p-3">12-06-2026</td>
+                <td
+                  colSpan="8"
+                  className="text-center py-10 text-gray-500"
+                >
+                  No Production Found
+                </td>
 
               </tr>
 
-            </tbody>
+            )}
 
-          </table>
+          </tbody>
 
-        </div>
+        </table>
 
       </div>
 
-    </MainLayout>
-  );
+    </div>
+
+  </MainLayout>
+
+);
+
 };
 
 export default Production;

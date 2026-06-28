@@ -1,11 +1,12 @@
-import MainLayout from "../../layouts/MainLayout";
 
-const Production = () => {
+import SupervisorLayout from "../../layouts/SupervisorLayout";
+
+const SupervisorReports = () => {
   return (
-    <MainLayout>
+    <SupervisorLayout>
 
       <h1 className="text-3xl font-bold mb-6">
-        Production Management
+        Reports Management
       </h1>
 
       {/* Summary Cards */}
@@ -13,84 +14,67 @@ const Production = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
         <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
+
+          <h3 className="text-lg">
+            Total Labour
+          </h3>
+
+          <h1 className="text-4xl font-bold mt-2">
+            35
+          </h1>
+
+        </div>
+
+        <div className="bg-green-600 text-white p-5 rounded-xl shadow">
+
+          <h3 className="text-lg">
+            Present Today
+          </h3>
+
+          <h1 className="text-4xl font-bold mt-2">
+            32
+          </h1>
+
+        </div>
+
+        <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
+
           <h3 className="text-lg">
             Today's Production
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+            450
           </h1>
+
         </div>
 
-        <div className="bg-green-600 text-white p-5 rounded-xl shadow">
+        <div className="bg-yellow-500 text-white p-5 rounded-xl shadow">
+
           <h3 className="text-lg">
-            Total Amount
+            Monthly Earnings
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹18,500
+            ₹12,500
           </h1>
-        </div>
 
-        <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Active Workers
-          </h3>
-
-          <h1 className="text-4xl font-bold mt-2">
-            72
-          </h1>
-        </div>
-
-        <div className="bg-red-500 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Monthly Production
-          </h3>
-
-          <h1 className="text-4xl font-bold mt-2">
-            18,500
-          </h1>
         </div>
 
       </div>
 
-      {/* Production Entry Form */}
+      {/* Generate Report */}
 
       <div className="bg-white rounded-xl shadow p-5 mb-6">
 
         <h2 className="text-xl font-semibold mb-4">
-          Add Production Entry
+          Generate Report
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-          <select className="border p-3 rounded-lg">
-            <option>Select Labour</option>
-            <option>Rahman</option>
-            <option>Ahmed</option>
-          </select>
-
-          <select className="border p-3 rounded-lg">
-            <option>Select Department</option>
-            <option>Stitching</option>
-            <option>Packing</option>
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
           <input
-            type="text"
-            placeholder="Work Type"
-            className="border p-3 rounded-lg"
-          />
-
-          <input
-            type="number"
-            placeholder="Quantity"
-            className="border p-3 rounded-lg"
-          />
-
-          <input
-            type="number"
-            placeholder="Piece Rate"
+            type="date"
             className="border p-3 rounded-lg"
           />
 
@@ -99,16 +83,31 @@ const Production = () => {
             className="border p-3 rounded-lg"
           />
 
-          <input
-            type="file"
-            className="border p-3 rounded-lg md:col-span-2"
-          />
+          <select className="border p-3 rounded-lg">
+
+            <option>
+              Select Report Type
+            </option>
+
+            <option>
+              Attendance Report
+            </option>
+
+            <option>
+              Production Report
+            </option>
+
+            <option>
+              Labour Report
+            </option>
+
+          </select>
+
+          <button className="bg-blue-700 text-white rounded-lg p-3">
+            Generate Report
+          </button>
 
         </div>
-
-        <button className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg">
-          Save Production
-        </button>
 
       </div>
 
@@ -118,18 +117,18 @@ const Production = () => {
 
         <input
           type="text"
-          placeholder="Search Production..."
+          placeholder="Search Reports..."
           className="w-full border p-3 rounded-lg"
         />
 
       </div>
 
-      {/* Production History */}
+      {/* Reports Table */}
 
       <div className="bg-white rounded-xl shadow p-5">
 
         <h2 className="text-xl font-semibold mb-4">
-          Production History
+          Reports History
         </h2>
 
         <div className="overflow-x-auto">
@@ -141,31 +140,23 @@ const Production = () => {
               <tr className="border-b">
 
                 <th className="p-3 text-left">
-                  Labour
+                  Report ID
                 </th>
 
                 <th className="p-3 text-left">
-                  Department
+                  Report Type
                 </th>
 
                 <th className="p-3 text-left">
-                  Work Type
-                </th>
-
-                <th className="p-3 text-left">
-                  Quantity
-                </th>
-
-                <th className="p-3 text-left">
-                  Rate
-                </th>
-
-                <th className="p-3 text-left">
-                  Amount
+                  Generated By
                 </th>
 
                 <th className="p-3 text-left">
                   Date
+                </th>
+
+                <th className="p-3 text-left">
+                  Status
                 </th>
 
                 <th className="p-3 text-left">
@@ -181,31 +172,27 @@ const Production = () => {
               <tr className="border-b">
 
                 <td className="p-3">
-                  Rahman
+                  REP001
                 </td>
 
                 <td className="p-3">
-                  Stitching
+                  Attendance Report
                 </td>
 
                 <td className="p-3">
-                  Wallet
-                </td>
-
-                <td className="p-3">
-                  50
-                </td>
-
-                <td className="p-3">
-                  ₹10
-                </td>
-
-                <td className="p-3">
-                  ₹500
+                  Supervisor
                 </td>
 
                 <td className="p-3">
                   12-06-2026
+                </td>
+
+                <td className="p-3">
+
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    Completed
+                  </span>
+
                 </td>
 
                 <td className="p-3">
@@ -216,12 +203,52 @@ const Production = () => {
                       View
                     </button>
 
-                    <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
-                      Edit
+                    <button className="bg-green-600 text-white px-3 py-2 rounded-lg">
+                      Download
                     </button>
 
-                    <button className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                      Delete
+                  </div>
+
+                </td>
+
+              </tr>
+
+              <tr className="border-b">
+
+                <td className="p-3">
+                  REP002
+                </td>
+
+                <td className="p-3">
+                  Production Report
+                </td>
+
+                <td className="p-3">
+                  Supervisor
+                </td>
+
+                <td className="p-3">
+                  13-06-2026
+                </td>
+
+                <td className="p-3">
+
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    Completed
+                  </span>
+
+                </td>
+
+                <td className="p-3">
+
+                  <div className="flex gap-2">
+
+                    <button className="bg-blue-600 text-white px-3 py-2 rounded-lg">
+                      View
+                    </button>
+
+                    <button className="bg-green-600 text-white px-3 py-2 rounded-lg">
+                      Download
                     </button>
 
                   </div>
@@ -233,31 +260,27 @@ const Production = () => {
               <tr>
 
                 <td className="p-3">
-                  Ahmed
+                  REP003
                 </td>
 
                 <td className="p-3">
-                  Packing
+                  Labour Report
                 </td>
 
                 <td className="p-3">
-                  Box Packing
+                  Supervisor
                 </td>
 
                 <td className="p-3">
-                  100
+                  14-06-2026
                 </td>
 
                 <td className="p-3">
-                  ₹5
-                </td>
 
-                <td className="p-3">
-                  ₹500
-                </td>
+                  <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                    Pending
+                  </span>
 
-                <td className="p-3">
-                  12-06-2026
                 </td>
 
                 <td className="p-3">
@@ -268,12 +291,8 @@ const Production = () => {
                       View
                     </button>
 
-                    <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
-                      Edit
-                    </button>
-
-                    <button className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                      Delete
+                    <button className="bg-green-600 text-white px-3 py-2 rounded-lg">
+                      Download
                     </button>
 
                   </div>
@@ -290,8 +309,8 @@ const Production = () => {
 
       </div>
 
-    </MainLayout>
+    </SupervisorLayout>
   );
 };
 
-export default Production;
+export default SupervisorReports;

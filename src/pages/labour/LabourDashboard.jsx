@@ -1,32 +1,28 @@
-import MainLayout from "../../layouts/MainLayout";
-
-import ProductionChart from "../../components/charts/ProductionChart";
+import LabourLayout from "../../layouts/LabourLayout";
 import AttendanceChart from "../../components/charts/AttendanceChart";
-import DepartmentChart from "../../components/charts/DepartmentChart";
-
+import ProductionChart from "../../components/charts/ProductionChart";
+import SalaryChart from "../../components/charts/SalaryChart";
 
 const Dashboard = () => {
   return (
-    <MainLayout>
+    <LabourLayout>
 
       <h1 className="text-3xl font-bold mb-6">
-        Owner Dashboard
+        My Dashboard
       </h1>
 
-      
-
-      {/* Stats Cards */}
+      {/* Summary Cards */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
         <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
 
           <h3 className="text-lg">
-            Total Labour
+            Today's Status
           </h3>
 
-          <h1 className="text-4xl font-bold mt-2">
-            125
+          <h1 className="text-3xl font-bold mt-2">
+            Present
           </h1>
 
         </div>
@@ -34,35 +30,39 @@ const Dashboard = () => {
         <div className="bg-green-600 text-white p-5 rounded-xl shadow">
 
           <h3 className="text-lg">
-            Present Today
+            Today's Production
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            118
+            45
           </h1>
 
-        </div>
-
-        <div className="bg-red-500 text-white p-5 rounded-xl shadow">
-
-          <h3 className="text-lg">
-            Absent Today
-          </h3>
-
-          <h1 className="text-4xl font-bold mt-2">
-            7
-          </h1>
+          <p className="text-sm mt-2">
+            Pieces Completed
+          </p>
 
         </div>
 
         <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
 
           <h3 className="text-lg">
-            Production Today
+            Current Salary
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+            ₹12,500
+          </h1>
+
+        </div>
+
+        <div className="bg-yellow-500 text-white p-5 rounded-xl shadow">
+
+          <h3 className="text-lg">
+            Advance Balance
+          </h3>
+
+          <h1 className="text-4xl font-bold mt-2">
+            ₹2,000
           </h1>
 
         </div>
@@ -71,19 +71,13 @@ const Dashboard = () => {
 
       {/* Charts Section */}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-
-        <ProductionChart />
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
 
         <AttendanceChart />
 
-      </div>
+        <ProductionChart />
 
-      {/* Department Chart */}
-
-      <div className="mb-8">
-
-        <DepartmentChart />
+        <SalaryChart />
 
       </div>
 
@@ -102,31 +96,31 @@ const Dashboard = () => {
           <div className="space-y-4">
 
             <div className="border-b pb-3">
-              New Labour Added
+              Wallet Stitching Completed - 50 Pieces
             </div>
 
             <div className="border-b pb-3">
-              Salary Generated
+              Attendance Marked Successfully
             </div>
 
             <div className="border-b pb-3">
-              Production Updated
+              Salary Credited For June
             </div>
 
             <div>
-              Advance Payment Given
+              Advance Request Approved
             </div>
 
           </div>
 
         </div>
 
-        {/* Salary Summary */}
+        {/* Work Summary */}
 
         <div className="bg-white rounded-xl shadow p-5">
 
           <h2 className="text-xl font-semibold mb-4">
-            Salary Summary
+            My Work Summary
           </h2>
 
           <div className="space-y-4">
@@ -134,11 +128,11 @@ const Dashboard = () => {
             <div className="flex justify-between">
 
               <span>
-                Total Salary
+                Total Pieces This Month
               </span>
 
               <span className="font-bold">
-                ₹2,50,000
+                850
               </span>
 
             </div>
@@ -146,11 +140,11 @@ const Dashboard = () => {
             <div className="flex justify-between">
 
               <span>
-                Total Advance
+                Wallet Stitching
               </span>
 
               <span className="font-bold">
-                ₹45,000
+                450 Pieces
               </span>
 
             </div>
@@ -158,11 +152,11 @@ const Dashboard = () => {
             <div className="flex justify-between">
 
               <span>
-                Pending Salary
+                Belt Stitching
               </span>
 
-              <span className="font-bold text-red-600">
-                ₹35,000
+              <span className="font-bold">
+                220 Pieces
               </span>
 
             </div>
@@ -170,11 +164,23 @@ const Dashboard = () => {
             <div className="flex justify-between">
 
               <span>
-                Paid Salary
+                Bag Stitching
+              </span>
+
+              <span className="font-bold">
+                180 Pieces
+              </span>
+
+            </div>
+
+            <div className="flex justify-between">
+
+              <span>
+                Total Earnings
               </span>
 
               <span className="font-bold text-green-600">
-                ₹2,15,000
+                ₹12,500
               </span>
 
             </div>
@@ -185,7 +191,7 @@ const Dashboard = () => {
 
       </div>
 
-    </MainLayout>
+    </LabourLayout>
   );
 };
 

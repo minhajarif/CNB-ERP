@@ -1,4 +1,5 @@
-const Navbar = ({ setSidebarOpen }) => {
+
+const SupervisorNavbar = ({ setSidebarOpen }) => {
   return (
     <div className="fixed top-0 left-0 right-0 z-40 h-16 bg-white border-b shadow-sm flex items-center justify-between px-4 md:px-6">
 
@@ -24,11 +25,11 @@ const Navbar = ({ setSidebarOpen }) => {
         <div className="hidden sm:block">
 
           <h4 className="font-medium">
-            Owner
+            Supervisor
           </h4>
 
           <p className="text-xs text-gray-500">
-            Administrator
+            Department Supervisor
           </p>
 
         </div>
@@ -39,4 +40,4 @@ const Navbar = ({ setSidebarOpen }) => {
   );
 };
 
-export default Navbar;
+export default SupervisorNavbar;

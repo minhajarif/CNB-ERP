@@ -1,18 +1,20 @@
-import { useState } from "react";
-import Sidebar from "../components/sidebar/Sidebar";
-import Navbar from "../components/navbar/Navbar";
 
-const MainLayout = ({ children }) => {
+import { useState } from "react";
+import LabourNavbar from "../components/labour-navbar/LabourNavbar";
+import LabourSidebar from "../components/labour-sidebar/LabourSidebar";
+
+const LabourLayout = ({ children }) => {
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-100">
 
-      <Navbar
+      <LabourNavbar
         setSidebarOpen={setSidebarOpen}
       />
 
-      <Sidebar
+      <LabourSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
@@ -25,4 +27,4 @@ const MainLayout = ({ children }) => {
   );
 };
 
-export default MainLayout;
+export default LabourLayout;

@@ -1,32 +1,25 @@
 
 import { Link } from "react-router-dom";
 
-const Sidebar = ({
+const LabourSidebar = ({
   sidebarOpen,
   setSidebarOpen,
 }) => {
-  
+
   const handleLogout = () => {
     localStorage.removeItem("userRole");
     window.location.href = "/login";
   };
-   
 
   const menuItems = [
-    { name: "Dashboard", path: "/owner/dashboard" },
-    { name: "Labour Management", path: "/owner/labour-management" },
-    { name: "Supervisor Management", path: "/owner/supervisor-management" },
-    { name: "Department Management", path: "/owner/department-management" },
-    { name: "Work Management", path: "/owner/work-management" },
-    { name: "Production", path: "/owner/production" },
-    { name: "Attendance", path: "/owner/attendance" },
-    { name: "Payroll", path: "/owner/payroll" },
-    { name: "Advance Management", path: "/owner/advance-management" },
-    { name: "Reports", path: "/owner/reports" },
-    { name: "Product Gallery", path: "/owner/product-gallery" },
-    { name: "Notifications", path: "/owner/notifications" },
-    { name: "Settings", path: "/owner/settings" },
-    { name: "Profile", path: "/owner/profile" },
+    { name: "Dashboard", path: "/labour/dashboard" },
+    { name: "My Attendance", path: "/labour/attendance" },
+    { name: "My Production", path: "/labour/production" },
+    { name: "My Salary", path: "/labour/salary" },
+    { name: "Advance History", path: "/labour/advance-history" },
+    { name: "Work History", path: "/labour/work-history" },
+    { name: "Notifications", path: "/labour/notifications" },
+    { name: "My Profile", path: "/labour/profile" },
   ];
 
   return (
@@ -44,21 +37,25 @@ const Sidebar = ({
           h-[calc(100vh-64px)]
           w-72 bg-slate-900 text-white
           flex flex-col
-          transform transition-transform duration-300 ease-in-out
+          transform transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
+
         <div className="p-5 border-b border-slate-700">
+
           <h1 className="text-2xl font-bold">
             CNB ERP
           </h1>
 
           <p className="text-sm text-slate-400 mt-1">
-            Factory Management System
+            Labour Panel
           </p>
+
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
+
           {menuItems.map((item) => (
             <Link
               key={item.name}
@@ -69,19 +66,23 @@ const Sidebar = ({
               {item.name}
             </Link>
           ))}
+
         </div>
 
         <div className="p-4 border-t border-slate-700">
+
           <button
              onClick={handleLogout}
              className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-lg"
           >
-             Logout
+              Logout
           </button>
+
         </div>
+
       </div>
     </>
   );
 };
 
-export default Sidebar;
+export default LabourSidebar;

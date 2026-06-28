@@ -1,9 +1,22 @@
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = true;
+const ProtectedRoute = ({
+  children,
+  allowedRole,
+}) => {
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  const userRole =
+    localStorage.getItem("userRole");
+
+  if (!userRole) {
+    return <Navigate to="/login" />;
+  }
+
+  if (userRole !== allowedRole) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;

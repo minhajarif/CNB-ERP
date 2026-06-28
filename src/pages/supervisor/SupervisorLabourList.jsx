@@ -1,11 +1,12 @@
-import MainLayout from "../../layouts/MainLayout";
 
-const Production = () => {
+import SupervisorLayout from "../../layouts/SupervisorLayout";
+
+const SupervisorLabourList = () => {
   return (
-    <MainLayout>
+    <SupervisorLayout>
 
       <h1 className="text-3xl font-bold mb-6">
-        Production Management
+        Labour List
       </h1>
 
       {/* Summary Cards */}
@@ -14,21 +15,31 @@ const Production = () => {
 
         <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
           <h3 className="text-lg">
-            Today's Production
+            Total Labour
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+            35
           </h1>
         </div>
 
         <div className="bg-green-600 text-white p-5 rounded-xl shadow">
           <h3 className="text-lg">
-            Total Amount
+            Present Today
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹18,500
+            32
+          </h1>
+        </div>
+
+        <div className="bg-red-500 text-white p-5 rounded-xl shadow">
+          <h3 className="text-lg">
+            Absent Today
+          </h3>
+
+          <h1 className="text-4xl font-bold mt-2">
+            3
           </h1>
         </div>
 
@@ -38,77 +49,9 @@ const Production = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            72
+            34
           </h1>
         </div>
-
-        <div className="bg-red-500 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Monthly Production
-          </h3>
-
-          <h1 className="text-4xl font-bold mt-2">
-            18,500
-          </h1>
-        </div>
-
-      </div>
-
-      {/* Production Entry Form */}
-
-      <div className="bg-white rounded-xl shadow p-5 mb-6">
-
-        <h2 className="text-xl font-semibold mb-4">
-          Add Production Entry
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-          <select className="border p-3 rounded-lg">
-            <option>Select Labour</option>
-            <option>Rahman</option>
-            <option>Ahmed</option>
-          </select>
-
-          <select className="border p-3 rounded-lg">
-            <option>Select Department</option>
-            <option>Stitching</option>
-            <option>Packing</option>
-          </select>
-
-          <input
-            type="text"
-            placeholder="Work Type"
-            className="border p-3 rounded-lg"
-          />
-
-          <input
-            type="number"
-            placeholder="Quantity"
-            className="border p-3 rounded-lg"
-          />
-
-          <input
-            type="number"
-            placeholder="Piece Rate"
-            className="border p-3 rounded-lg"
-          />
-
-          <input
-            type="date"
-            className="border p-3 rounded-lg"
-          />
-
-          <input
-            type="file"
-            className="border p-3 rounded-lg md:col-span-2"
-          />
-
-        </div>
-
-        <button className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg">
-          Save Production
-        </button>
 
       </div>
 
@@ -118,18 +61,18 @@ const Production = () => {
 
         <input
           type="text"
-          placeholder="Search Production..."
+          placeholder="Search Labour..."
           className="w-full border p-3 rounded-lg"
         />
 
       </div>
 
-      {/* Production History */}
+      {/* Labour Table */}
 
       <div className="bg-white rounded-xl shadow p-5">
 
         <h2 className="text-xl font-semibold mb-4">
-          Production History
+          Department Labour
         </h2>
 
         <div className="overflow-x-auto">
@@ -141,7 +84,15 @@ const Production = () => {
               <tr className="border-b">
 
                 <th className="p-3 text-left">
-                  Labour
+                  ID
+                </th>
+
+                <th className="p-3 text-left">
+                  Photo
+                </th>
+
+                <th className="p-3 text-left">
+                  Name
                 </th>
 
                 <th className="p-3 text-left">
@@ -149,23 +100,11 @@ const Production = () => {
                 </th>
 
                 <th className="p-3 text-left">
-                  Work Type
+                  Mobile
                 </th>
 
                 <th className="p-3 text-left">
-                  Quantity
-                </th>
-
-                <th className="p-3 text-left">
-                  Rate
-                </th>
-
-                <th className="p-3 text-left">
-                  Amount
-                </th>
-
-                <th className="p-3 text-left">
-                  Date
+                  Status
                 </th>
 
                 <th className="p-3 text-left">
@@ -181,6 +120,20 @@ const Production = () => {
               <tr className="border-b">
 
                 <td className="p-3">
+                  EMP001
+                </td>
+
+                <td className="p-3">
+
+                  <img
+                    src="https://i.pravatar.cc/40"
+                    alt="labour"
+                    className="w-10 h-10 rounded-full"
+                  />
+
+                </td>
+
+                <td className="p-3">
                   Rahman
                 </td>
 
@@ -189,23 +142,15 @@ const Production = () => {
                 </td>
 
                 <td className="p-3">
-                  Wallet
+                  9876543210
                 </td>
 
                 <td className="p-3">
-                  50
-                </td>
 
-                <td className="p-3">
-                  ₹10
-                </td>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    Active
+                  </span>
 
-                <td className="p-3">
-                  ₹500
-                </td>
-
-                <td className="p-3">
-                  12-06-2026
                 </td>
 
                 <td className="p-3">
@@ -218,10 +163,6 @@ const Production = () => {
 
                     <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
                       Edit
-                    </button>
-
-                    <button className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                      Delete
                     </button>
 
                   </div>
@@ -233,31 +174,37 @@ const Production = () => {
               <tr>
 
                 <td className="p-3">
+                  EMP002
+                </td>
+
+                <td className="p-3">
+
+                  <img
+                    src="https://i.pravatar.cc/41"
+                    alt="labour"
+                    className="w-10 h-10 rounded-full"
+                  />
+
+                </td>
+
+                <td className="p-3">
                   Ahmed
                 </td>
 
                 <td className="p-3">
-                  Packing
+                  Stitching
                 </td>
 
                 <td className="p-3">
-                  Box Packing
+                  9876543211
                 </td>
 
                 <td className="p-3">
-                  100
-                </td>
 
-                <td className="p-3">
-                  ₹5
-                </td>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                    Active
+                  </span>
 
-                <td className="p-3">
-                  ₹500
-                </td>
-
-                <td className="p-3">
-                  12-06-2026
                 </td>
 
                 <td className="p-3">
@@ -270,10 +217,6 @@ const Production = () => {
 
                     <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
                       Edit
-                    </button>
-
-                    <button className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                      Delete
                     </button>
 
                   </div>
@@ -290,8 +233,8 @@ const Production = () => {
 
       </div>
 
-    </MainLayout>
+    </SupervisorLayout>
   );
 };
 
-export default Production;
+export default SupervisorLabourList;

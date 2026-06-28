@@ -1,18 +1,20 @@
-import { useState } from "react";
-import Sidebar from "../components/sidebar/Sidebar";
-import Navbar from "../components/navbar/Navbar";
 
-const MainLayout = ({ children }) => {
+import { useState } from "react";
+import SupervisorNavbar from "../components/supervisor-navbar/SupervisorNavbar";
+import SupervisorSidebar from "../components/supervisor-sidebar/SupervisorSidebar";
+
+const SupervisorLayout = ({ children }) => {
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-100">
 
-      <Navbar
+      <SupervisorNavbar
         setSidebarOpen={setSidebarOpen}
       />
 
-      <Sidebar
+      <SupervisorSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
@@ -25,4 +27,4 @@ const MainLayout = ({ children }) => {
   );
 };
 
-export default MainLayout;
+export default SupervisorLayout;
