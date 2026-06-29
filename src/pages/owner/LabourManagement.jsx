@@ -101,17 +101,17 @@ const LabourManagement = () => {
 
         <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-5 rounded-2xl shadow">
           <p>Present Today</p>
-          <h2 className="text-4xl font-bold mt-2">118</h2>
+          <h2 className="text-4xl font-bold mt-2">0</h2>
         </div>
 
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-5 rounded-2xl shadow">
           <p>Monthly Production</p>
-          <h2 className="text-4xl font-bold mt-2">8500</h2>
+          <h2 className="text-4xl font-bold mt-2">0</h2>
         </div>
 
         <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-5 rounded-2xl shadow">
           <p>Salary Cost</p>
-          <h2 className="text-4xl font-bold mt-2">₹2.5L</h2>
+          <h2 className="text-4xl font-bold mt-2">0</h2>
         </div>
 
       </div>
@@ -344,12 +344,12 @@ const LabourManagement = () => {
              })
            }
            className="border p-3 rounded-lg"
->
-  <option value="">Select Department</option>
-  <option value="Stitching">Stitching</option>
-  <option value="Packing">Packing</option>
-  <option value="Finishing">Finishing</option>
-</select>
+        >
+         <option value="">Select Department</option>
+         <option value="Stitching">Stitching</option>
+         <option value="Packing">Packing</option>
+         <option value="Finishing">Finishing</option>
+        </select>
 
         <select className="border p-3 rounded-lg">
           <option>Status</option>

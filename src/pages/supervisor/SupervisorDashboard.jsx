@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import SupervisorLayout from "../../layouts/SupervisorLayout";
 
 import AttendanceChart from "../../components/charts/AttendanceChart";
@@ -5,7 +7,33 @@ import ProductionChart from "../../components/charts/ProductionChart";
 import SalaryChart from "../../components/charts/SalaryChart";
 
 const SupervisorDashboard = () => {
+
+  const [dashboardData] = useState({
+
+    totalLabour: 0,
+
+    presentToday: 0,
+
+    absentToday: 0,
+
+    lateEntries: 0,
+
+    productionToday: 0,
+
+    salaryToday: 0,
+
+    department: "",
+
+    monthlySalary: 0,
+
+  });
+
+  const [topLabours] = useState([]);
+
+  const [activities] = useState([]);
+
   return (
+
     <SupervisorLayout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -23,7 +51,7 @@ const SupervisorDashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            35
+            {dashboardData.totalLabour}
           </h1>
 
         </div>
@@ -35,7 +63,7 @@ const SupervisorDashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            32
+            {dashboardData.presentToday}
           </h1>
 
         </div>
@@ -47,7 +75,7 @@ const SupervisorDashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            3
+            {dashboardData.absentToday}
           </h1>
 
         </div>
@@ -59,7 +87,7 @@ const SupervisorDashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            1
+            {dashboardData.lateEntries}
           </h1>
 
         </div>
@@ -71,7 +99,7 @@ const SupervisorDashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            450
+            {dashboardData.productionToday}
           </h1>
 
         </div>
@@ -83,14 +111,14 @@ const SupervisorDashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            ₹12,500
+            ₹{dashboardData.salaryToday}
           </h1>
 
         </div>
 
       </div>
 
-      {/* Charts */}
+            {/* Charts */}
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
 
@@ -118,43 +146,49 @@ const SupervisorDashboard = () => {
 
             <div className="flex justify-between">
               <span>Department</span>
+
               <span className="font-bold">
-                Stitching
+                {dashboardData.department || "-"}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Total Labour</span>
+
               <span className="font-bold">
-                35
+                {dashboardData.totalLabour}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Present</span>
+
               <span className="font-bold text-green-600">
-                32
+                {dashboardData.presentToday}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Absent</span>
+
               <span className="font-bold text-red-600">
-                3
+                {dashboardData.absentToday}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Production Today</span>
+
               <span className="font-bold">
-                450 Pieces
+                {dashboardData.productionToday}
               </span>
             </div>
 
             <div className="flex justify-between">
               <span>Monthly Salary Cost</span>
+
               <span className="font-bold text-purple-600">
-                ₹2,85,000
+                ₹{dashboardData.monthlySalary}
               </span>
             </div>
 
@@ -195,54 +229,45 @@ const SupervisorDashboard = () => {
               </thead>
 
               <tbody>
+                              {topLabours.length > 0 ? (
 
-                <tr className="border-b">
+                  topLabours.map((item, index) => (
 
-                  <td className="p-3">
-                    Rahman
-                  </td>
+                    <tr
+                      key={index}
+                      className="border-b"
+                    >
 
-                  <td className="p-3">
-                    450
-                  </td>
+                      <td className="p-3">
+                        {item.name}
+                      </td>
 
-                  <td className="p-3">
-                    ₹12,500
-                  </td>
+                      <td className="p-3">
+                        {item.production}
+                      </td>
 
-                </tr>
+                      <td className="p-3">
+                        ₹{item.salary}
+                      </td>
 
-                <tr className="border-b">
+                    </tr>
 
-                  <td className="p-3">
-                    Ahmed
-                  </td>
+                  ))
 
-                  <td className="p-3">
-                    390
-                  </td>
+                ) : (
 
-                  <td className="p-3">
-                    ₹11,200
-                  </td>
+                  <tr>
 
-                </tr>
+                    <td
+                      colSpan="3"
+                      className="text-center py-6 text-gray-500"
+                    >
+                      No Top Labour Found
+                    </td>
 
-                <tr>
+                  </tr>
 
-                  <td className="p-3">
-                    Ali
-                  </td>
-
-                  <td className="p-3">
-                    350
-                  </td>
-
-                  <td className="p-3">
-                    ₹10,000
-                  </td>
-
-                </tr>
+                )}
 
               </tbody>
 
@@ -263,29 +288,35 @@ const SupervisorDashboard = () => {
         </h2>
 
         <div className="space-y-4">
+                  {activities.length > 0 ? (
 
-          <div className="border-b pb-3">
-            Attendance Updated Successfully
-          </div>
+            activities.map((activity, index) => (
 
-          <div className="border-b pb-3">
-            Production Entry Added
-          </div>
+              <div
+                key={index}
+                className="border-b pb-3 last:border-0"
+              >
+                {activity}
+              </div>
 
-          <div className="border-b pb-3">
-            Salary Updated
-          </div>
+            ))
 
-          <div>
-            Work Assigned To Labour
-          </div>
+          ) : (
+
+            <div className="text-center text-gray-500 py-6">
+              No Recent Activities
+            </div>
+
+          )}
 
         </div>
 
       </div>
 
     </SupervisorLayout>
+
   );
+
 };
 
-export default SupervisorDashboard;
+export default SupervisorDashboard;  

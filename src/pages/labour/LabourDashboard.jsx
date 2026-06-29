@@ -1,10 +1,28 @@
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 import AttendanceChart from "../../components/charts/AttendanceChart";
 import ProductionChart from "../../components/charts/ProductionChart";
 import SalaryChart from "../../components/charts/SalaryChart";
 
 const Dashboard = () => {
+
+  const [dashboardData] = useState({
+    attendanceStatus: "--",
+    todayProduction: 0,
+    currentSalary: 0,
+    advanceBalance: 0,
+
+    totalPieces: 0,
+    walletPieces: 0,
+    beltPieces: 0,
+    bagPieces: 0,
+    totalEarnings: 0,
+
+    recentActivities: [],
+  });
+
   return (
+
     <LabourLayout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -22,7 +40,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-3xl font-bold mt-2">
-            Present
+            {dashboardData.attendanceStatus}
           </h1>
 
         </div>
@@ -34,7 +52,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            45
+            {dashboardData.todayProduction}
           </h1>
 
           <p className="text-sm mt-2">
@@ -50,7 +68,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹12,500
+            ₹{dashboardData.currentSalary}
           </h1>
 
         </div>
@@ -62,14 +80,13 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹2,000
+            ₹{dashboardData.advanceBalance}
           </h1>
 
         </div>
 
       </div>
-
-      {/* Charts Section */}
+            {/* Charts Section */}
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
 
@@ -94,22 +111,28 @@ const Dashboard = () => {
           </h2>
 
           <div className="space-y-4">
+                      {dashboardData.recentActivities.length > 0 ? (
 
-            <div className="border-b pb-3">
-              Wallet Stitching Completed - 50 Pieces
-            </div>
+              dashboardData.recentActivities.map((activity, index) => (
 
-            <div className="border-b pb-3">
-              Attendance Marked Successfully
-            </div>
+                <div
+                  key={index}
+                  className="border-b pb-3 last:border-b-0"
+                >
+                  {activity}
+                </div>
 
-            <div className="border-b pb-3">
-              Salary Credited For June
-            </div>
+              ))
 
-            <div>
-              Advance Request Approved
-            </div>
+            ) : (
+
+              <div className="text-center text-gray-500 py-8">
+
+                No Recent Activities Found
+
+              </div>
+
+            )}
 
           </div>
 
@@ -124,15 +147,14 @@ const Dashboard = () => {
           </h2>
 
           <div className="space-y-4">
-
-            <div className="flex justify-between">
+                      <div className="flex justify-between">
 
               <span>
                 Total Pieces This Month
               </span>
 
               <span className="font-bold">
-                850
+                {dashboardData.totalPieces}
               </span>
 
             </div>
@@ -144,7 +166,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold">
-                450 Pieces
+                {dashboardData.walletPieces} Pieces
               </span>
 
             </div>
@@ -156,7 +178,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold">
-                220 Pieces
+                {dashboardData.beltPieces} Pieces
               </span>
 
             </div>
@@ -168,7 +190,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold">
-                180 Pieces
+                {dashboardData.bagPieces} Pieces
               </span>
 
             </div>
@@ -180,19 +202,20 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold text-green-600">
-                ₹12,500
+                ₹{dashboardData.totalEarnings}
               </span>
 
             </div>
 
           </div>
 
-        </div>
-
-      </div>
+        </div>  
+              </div>
 
     </LabourLayout>
+
   );
+
 };
 
 export default Dashboard;

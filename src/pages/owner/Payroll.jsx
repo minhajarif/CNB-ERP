@@ -1,193 +1,429 @@
+import { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 
 const Payroll = () => {
-return ( <MainLayout>
 
-  <h1 className="text-3xl font-bold mb-6">
-    Payroll Management
-  </h1>
+  const [payrolls, setPayrolls] = useState([]);
 
-  {/* Summary Cards */}
+  const [editIndex, setEditIndex] = useState(null);
 
-  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+  const [search, setSearch] = useState("");
 
-    <div className="bg-green-600 text-white p-5 rounded-xl shadow">
-      <h3 className="text-lg">
-        Total Salary
-      </h3>
+  const [showForm, setShowForm] = useState(false);
 
-      <h1 className="text-4xl font-bold mt-2">
-        ₹2,50,000
-      </h1>
-    </div>
+  const [formData, setFormData] = useState({
+    labour: "",
+    department: "",
+    grossSalary: "",
+    advance: "",
+    netSalary: "",
+    status: "Pending",
+  });
 
-    <div className="bg-yellow-500 text-white p-5 rounded-xl shadow">
-      <h3 className="text-lg">
-        Total Advance
-      </h3>
+  const handleSavePayroll = () => {
 
-      <h1 className="text-4xl font-bold mt-2">
-        ₹45,000
-      </h1>
-    </div>
+    if (
+      !formData.labour ||
+      !formData.department ||
+      !formData.grossSalary
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
 
-    <div className="bg-red-500 text-white p-5 rounded-xl shadow">
-      <h3 className="text-lg">
-        Pending Salary
-      </h3>
+    if (editIndex !== null) {
 
-      <h1 className="text-4xl font-bold mt-2">
-        ₹35,000
-      </h1>
-    </div>
+      const updated = [...payrolls];
 
-    <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
-      <h3 className="text-lg">
-        Paid Salary
-      </h3>
+      updated[editIndex] = formData;
 
-      <h1 className="text-4xl font-bold mt-2">
-        ₹2,15,000
-      </h1>
-    </div>
+      setPayrolls(updated);
 
-  </div>
+      setEditIndex(null);
 
-  {/* Generate Salary */}
+    } else {
 
-  <div className="bg-white rounded-xl shadow p-5 mb-6">
+      setPayrolls([
+        ...payrolls,
+        formData,
+      ]);
 
-    <h2 className="text-xl font-semibold mb-4">
-      Generate Salary
-    </h2>
+    }
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    setFormData({
+      labour: "",
+      department: "",
+      grossSalary: "",
+      advance: "",
+      netSalary: "",
+      status: "Pending",
+    });
 
-      <select className="border p-3 rounded-lg">
-        <option>Select Labour</option>
-        <option>Rahman</option>
-        <option>Ahmed</option>
-      </select>
+    setShowForm(false);
 
-      <input
-        type="month"
-        className="border p-3 rounded-lg"
-      />
+  };
 
-      <button className="bg-blue-700 text-white rounded-lg p-3">
-        Generate Salary
-      </button>
+  const handleDeletePayroll = (index) => {
 
-    </div>
+    setPayrolls(
+      payrolls.filter((_, i) => i !== index)
+    );
 
-  </div>
+  };
 
-  {/* Search */}
+  const handleEditPayroll = (index) => {
 
-  <div className="bg-white rounded-xl shadow p-5 mb-6">
+    setFormData(payrolls[index]);
 
-    <input
-      type="text"
-      placeholder="Search Payroll..."
-      className="w-full border p-3 rounded-lg"
-    />
+    setEditIndex(index);
 
-  </div>
+    setShowForm(true);
 
-  {/* Payroll Table */}
+  };
 
-  <div className="bg-white rounded-xl shadow p-5">
+  const handlePay = (index) => {
 
-    <div className="overflow-x-auto">
+    const updated = [...payrolls];
 
-      <table className="w-full">
+    updated[index].status = "Paid";
 
-        <thead>
+    setPayrolls(updated);
 
-          <tr className="border-b">
+  };
 
-            <th className="p-3 text-left">Labour</th>
-            <th className="p-3 text-left">Department</th>
-            <th className="p-3 text-left">Gross Salary</th>
-            <th className="p-3 text-left">Advance</th>
-            <th className="p-3 text-left">Net Salary</th>
-            <th className="p-3 text-left">Status</th>
-            <th className="p-3 text-left">Action</th>
+  const filteredPayrolls = payrolls.filter((item) =>
+    item.labour.toLowerCase().includes(search.toLowerCase())
+  );
 
-          </tr>
+  return (
+    <MainLayout>
+           {/* Header */}
 
-        </thead>
+      <div className="flex justify-between items-center mb-6">
 
-        <tbody>
+        <h1 className="text-3xl font-bold">
+          Payroll Management
+        </h1>
 
-          <tr className="border-b">
+        <button
+          onClick={() => {
+            setShowForm(true);
+            setEditIndex(null);
+            setFormData({
+              labour: "",
+              department: "",
+              grossSalary: "",
+              advance: "",
+              netSalary: "",
+              status: "Pending",
+            });
+          }}
+          className="bg-blue-700 text-white px-5 py-3 rounded-xl"
+        >
+          + Generate Payroll
+        </button>
 
-            <td className="p-3">Rahman</td>
-            <td className="p-3">Stitching</td>
-            <td className="p-3">₹12,000</td>
-            <td className="p-3">₹2,000</td>
-            <td className="p-3 font-semibold">₹10,000</td>
+      </div>
 
-            <td className="p-3">
+      {/* Summary Cards */}
 
-              <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                Pending
-              </span>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
 
-            </td>
+        <div className="bg-green-600 text-white p-5 rounded-xl shadow">
+          <h3>Total Salary</h3>
+          <h1 className="text-4xl font-bold mt-2">
+            ₹{
+              payrolls.reduce(
+                (t, item) => t + Number(item.grossSalary || 0),
+                0
+              )
+            }
+          </h1>
+        </div>
 
-            <td className="p-3 flex gap-2">
+        <div className="bg-yellow-500 text-white p-5 rounded-xl shadow">
+          <h3>Total Advance</h3>
+          <h1 className="text-4xl font-bold mt-2">
+            ₹{
+              payrolls.reduce(
+                (t, item) => t + Number(item.advance || 0),
+                0
+              )
+            }
+          </h1>
+        </div>
 
-              <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
-                Pay
-              </button>
+        <div className="bg-red-500 text-white p-5 rounded-xl shadow">
+          <h3>Pending Salary</h3>
+          <h1 className="text-4xl font-bold mt-2">
+            {
+              payrolls.filter(
+                (item) => item.status === "Pending"
+              ).length
+            }
+          </h1>
+        </div>
 
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                View
-              </button>
+        <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
+          <h3>Paid Salary</h3>
+          <h1 className="text-4xl font-bold mt-2">
+            {
+              payrolls.filter(
+                (item) => item.status === "Paid"
+              ).length
+            }
+          </h1>
+        </div>
 
-            </td>
+      </div>
 
-          </tr>
+      {showForm && (
 
-          <tr>
+      <div className="bg-white rounded-xl shadow p-5 mb-6">
 
-            <td className="p-3">Ahmed</td>
-            <td className="p-3">Packing</td>
-            <td className="p-3">₹15,000</td>
-            <td className="p-3">₹3,000</td>
-            <td className="p-3 font-semibold">₹12,000</td>
+        <h2 className="text-xl font-semibold mb-4">
 
-            <td className="p-3">
+          {editIndex !== null
+            ? "Edit Payroll"
+            : "Generate Payroll"}
 
-              <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                Paid
-              </span>
+        </h2>
 
-            </td>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <input
+            type="text"
+            placeholder="Labour Name"
+            value={formData.labour}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                labour: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-            <td className="p-3">
+          <input
+            type="text"
+            placeholder="Department"
+            value={formData.department}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                department: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                View
-              </button>
+          <input
+            type="number"
+            placeholder="Gross Salary"
+            value={formData.grossSalary}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                grossSalary: e.target.value,
+                netSalary:
+                  Number(e.target.value) -
+                  Number(formData.advance || 0),
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-            </td>
+          <input
+            type="number"
+            placeholder="Advance"
+            value={formData.advance}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                advance: e.target.value,
+                netSalary:
+                  Number(formData.grossSalary || 0) -
+                  Number(e.target.value),
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-          </tr>
+          <input
+            type="number"
+            placeholder="Net Salary"
+            value={formData.netSalary}
+            readOnly
+            className="border p-3 rounded-lg bg-gray-100"
+          />
 
-        </tbody>
+          <select
+            value={formData.status}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                status: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          >
+            <option value="Pending">Pending</option>
+            <option value="Paid">Paid</option>
+          </select>
 
-      </table>
+        </div>
 
-    </div>
+        <button
+          onClick={handleSavePayroll}
+          className="bg-blue-700 text-white px-6 py-3 rounded-lg mt-5"
+        >
+          {editIndex !== null
+            ? "Update Payroll"
+            : "Save Payroll"}
+        </button>
 
-  </div>
+      </div>
 
-</MainLayout>
+      )}
 
+      {/* Search */}
 
-);
+      <div className="bg-white rounded-xl shadow p-5 mb-6">
+
+        <input
+          type="text"
+          placeholder="Search Payroll..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          className="w-full border p-3 rounded-lg"
+        />
+
+      </div>
+
+      {/* Payroll Table */}
+
+      <div className="bg-white rounded-xl shadow p-5">
+
+        <div className="overflow-x-auto">
+
+          <table className="w-full">
+
+            <thead>
+
+              <tr className="border-b">
+                <th className="p-3 text-left">Labour</th>
+                <th className="p-3 text-left">Department</th>
+                <th className="p-3 text-left">Gross Salary</th>
+                <th className="p-3 text-left">Advance</th>
+                <th className="p-3 text-left">Net Salary</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">Action</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+                            {filteredPayrolls.map((item, index) => (
+
+                <tr
+                  key={index}
+                  className="border-b"
+                >
+
+                  <td className="p-3">
+                    {item.labour}
+                  </td>
+
+                  <td className="p-3">
+                    {item.department}
+                  </td>
+
+                  <td className="p-3">
+                    ₹{item.grossSalary}
+                  </td>
+
+                  <td className="p-3">
+                    ₹{item.advance}
+                  </td>
+
+                  <td className="p-3 font-semibold">
+                    ₹{item.netSalary}
+                  </td>
+
+                  <td className="p-3">
+
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        item.status === "Paid"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+
+                  </td>
+
+                  <td className="p-3">
+
+                    <div className="flex gap-2">
+
+                      {item.status === "Pending" && (
+
+                        <button
+                          onClick={() => handlePay(index)}
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                        >
+                          Pay
+                        </button>
+
+                      )}
+
+                      <button
+                        onClick={() =>
+                          handleEditPayroll(index)
+                        }
+                        className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleDeletePayroll(index)
+                        }
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                      >
+                        Delete
+                      </button>
+
+                      <button
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                      >
+                        View
+                      </button>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </MainLayout>
+
+  );
+
 };
 
 export default Payroll;

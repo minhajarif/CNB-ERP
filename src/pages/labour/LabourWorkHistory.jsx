@@ -1,8 +1,30 @@
-
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 
 const LabourWorkHistory = () => {
+
+  const [workHistory] = useState([]);
+
+  const [searchMonth, setSearchMonth] = useState("");
+
+  const [searchWorkType, setSearchWorkType] = useState("");
+
+  const filteredWorkHistory = workHistory.filter((item) => {
+
+    const matchMonth =
+      !searchMonth || item.date.startsWith(searchMonth);
+
+    const matchWork =
+      item.workType
+        .toLowerCase()
+        .includes(searchWorkType.toLowerCase());
+
+    return matchMonth && matchWork;
+
+  });
+
   return (
+
     <LabourLayout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -20,7 +42,15 @@ const LabourWorkHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+
+            {
+              workHistory.reduce(
+                (total, item) =>
+                  total + Number(item.quantity || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
@@ -32,7 +62,15 @@ const LabourWorkHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            320
+
+            {
+              filteredWorkHistory.reduce(
+                (total, item) =>
+                  total + Number(item.quantity || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
@@ -44,7 +82,15 @@ const LabourWorkHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            5
+
+            {
+              [...new Set(
+                workHistory.map(
+                  (item) => item.workType
+                )
+              )].length
+            }
+
           </h1>
 
         </div>
@@ -56,14 +102,23 @@ const LabourWorkHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹12,500
+
+            ₹{
+              workHistory.reduce(
+                (total, item) =>
+                  total +
+                  Number(item.quantity || 0) *
+                  Number(item.rate || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
 
       </div>
-
-      {/* Filter */}
+            {/* Filter */}
 
       <div className="bg-white rounded-xl shadow p-5 mb-6">
 
@@ -71,12 +126,20 @@ const LabourWorkHistory = () => {
 
           <input
             type="month"
+            value={searchMonth}
+            onChange={(e) =>
+              setSearchMonth(e.target.value)
+            }
             className="border p-3 rounded-lg"
           />
 
           <input
             type="text"
             placeholder="Search Work Type..."
+            value={searchWorkType}
+            onChange={(e) =>
+              setSearchWorkType(e.target.value)
+            }
             className="border p-3 rounded-lg"
           />
 
@@ -134,113 +197,70 @@ const LabourWorkHistory = () => {
 
             <tbody>
 
-              <tr className="border-b">
+              {filteredWorkHistory.length > 0 ? (
 
-                <td className="p-3">
-                  12-06-2026
-                </td>
+                filteredWorkHistory.map((item, index) => (
 
-                <td className="p-3">
-                  Wallet Stitching
-                </td>
+                  <tr
+                    key={index}
+                    className="border-b"
+                  >
 
-                <td className="p-3">
-                  Stitching
-                </td>
+                    <td className="p-3">
+                      {item.date}
+                    </td>
 
-                <td className="p-3">
-                  50
-                </td>
+                    <td className="p-3">
+                      {item.workType}
+                    </td>
 
-                <td className="p-3">
-                  ₹10
-                </td>
+                    <td className="p-3">
+                      {item.department}
+                    </td>
 
-                <td className="p-3 font-semibold">
-                  ₹500
-                </td>
+                    <td className="p-3">
+                      {item.quantity}
+                    </td>
 
-                <td className="p-3">
+                    <td className="p-3">
+                      ₹{item.rate}
+                    </td>
 
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Completed
-                  </span>
+                    <td className="p-3 font-semibold">
+                      ₹{Number(item.quantity) * Number(item.rate)}
+                    </td>
 
-                </td>
+                    <td className="p-3">
 
-              </tr>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          item.status === "Completed"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
 
-              <tr className="border-b">
+                    </td>
 
-                <td className="p-3">
-                  11-06-2026
-                </td>
+                  </tr>
 
-                <td className="p-3">
-                  Belt Stitching
-                </td>
+                ))
 
-                <td className="p-3">
-                  Stitching
-                </td>
+              ) : (
+                                <tr>
 
-                <td className="p-3">
-                  40
-                </td>
+                  <td
+                    colSpan="7"
+                    className="text-center py-6 text-gray-500"
+                  >
+                    No Work Records Found
+                  </td>
 
-                <td className="p-3">
-                  ₹12
-                </td>
+                </tr>
 
-                <td className="p-3 font-semibold">
-                  ₹480
-                </td>
-
-                <td className="p-3">
-
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Completed
-                  </span>
-
-                </td>
-
-              </tr>
-
-              <tr>
-
-                <td className="p-3">
-                  10-06-2026
-                </td>
-
-                <td className="p-3">
-                  Bag Stitching
-                </td>
-
-                <td className="p-3">
-                  Stitching
-                </td>
-
-                <td className="p-3">
-                  25
-                </td>
-
-                <td className="p-3">
-                  ₹20
-                </td>
-
-                <td className="p-3 font-semibold">
-                  ₹500
-                </td>
-
-                <td className="p-3">
-
-                  <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                    Pending
-                  </span>
-
-                </td>
-
-              </tr>
+              )}
 
             </tbody>
 
@@ -251,7 +271,9 @@ const LabourWorkHistory = () => {
       </div>
 
     </LabourLayout>
+
   );
+
 };
 
 export default LabourWorkHistory;

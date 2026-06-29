@@ -1,7 +1,53 @@
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 
 const LabourAdvanceHistory = () => {
+
+  const [advances, setAdvances] = useState([]);
+
+  const [showForm, setShowForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    amount: "",
+    date: "",
+    reason: "",
+    status: "Pending",
+  });
+
+  const handleSubmitRequest = () => {
+
+    if (
+      !formData.amount ||
+      !formData.date ||
+      !formData.reason
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    const newAdvance = {
+      requestId: `ADV${String(advances.length + 1).padStart(3, "0")}`,
+      ...formData,
+    };
+
+    setAdvances([
+      ...advances,
+      newAdvance,
+    ]);
+
+    setFormData({
+      amount: "",
+      date: "",
+      reason: "",
+      status: "Pending",
+    });
+
+    setShowForm(false);
+
+  };
+
   return (
+
     <LabourLayout>
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
@@ -10,8 +56,11 @@ const LabourAdvanceHistory = () => {
           Advance History
         </h1>
 
-        <button className="bg-blue-700 text-white px-5 py-3 rounded-lg">
-          Request Advance
+        <button
+          onClick={() => setShowForm(true)}
+          className="bg-blue-700 text-white px-5 py-3 rounded-lg"
+        >
+          + Request Advance
         </button>
 
       </div>
@@ -23,11 +72,19 @@ const LabourAdvanceHistory = () => {
         <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
 
           <h3 className="text-lg">
-            Total Advance Taken
+            Total Advance
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹12,000
+
+            ₹{
+              advances.reduce(
+                (total, item) =>
+                  total + Number(item.amount || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
@@ -39,7 +96,19 @@ const LabourAdvanceHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹10,000
+
+            ₹{
+              advances
+                .filter(
+                  (item) => item.status === "Approved"
+                )
+                .reduce(
+                  (total, item) =>
+                    total + Number(item.amount || 0),
+                  0
+                )
+            }
+
           </h1>
 
         </div>
@@ -51,7 +120,19 @@ const LabourAdvanceHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹2,000
+
+            ₹{
+              advances
+                .filter(
+                  (item) => item.status === "Pending"
+                )
+                .reduce(
+                  (total, item) =>
+                    total + Number(item.amount || 0),
+                  0
+                )
+            }
+
           </h1>
 
         </div>
@@ -63,49 +144,86 @@ const LabourAdvanceHistory = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹1,500
+
+            ₹{
+              advances
+                .filter(
+                  (item) => item.status === "Rejected"
+                )
+                .reduce(
+                  (total, item) =>
+                    total + Number(item.amount || 0),
+                  0
+                )
+            }
+
           </h1>
 
         </div>
 
       </div>
+            {showForm && (
 
-      {/* Request Form */}
+        <div className="bg-white rounded-xl shadow p-5 mb-6">
 
-      <div className="bg-white rounded-xl shadow p-5 mb-6">
+          <h2 className="text-xl font-semibold mb-4">
+            New Advance Request
+          </h2>
 
-        <h2 className="text-xl font-semibold mb-4">
-          New Advance Request
-        </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="number"
+              placeholder="Advance Amount"
+              value={formData.amount}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  amount: e.target.value,
+                })
+              }
+              className="border p-3 rounded-lg"
+            />
 
-          <input
-            type="number"
-            placeholder="Advance Amount"
-            className="border p-3 rounded-lg"
-          />
+            <input
+              type="date"
+              value={formData.date}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  date: e.target.value,
+                })
+              }
+              className="border p-3 rounded-lg"
+            />
 
-          <input
-            type="date"
-            className="border p-3 rounded-lg"
-          />
+            <textarea
+              rows="4"
+              placeholder="Reason for Advance"
+              value={formData.reason}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  reason: e.target.value,
+                })
+              }
+              className="border p-3 rounded-lg md:col-span-2"
+            />
 
-          <textarea
-            rows="4"
-            placeholder="Reason for Advance"
-            className="border p-3 rounded-lg md:col-span-2"
-          />
+          </div>
+
+          <button
+            onClick={handleSubmitRequest}
+            className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg"
+          >
+            Submit Request
+          </button>
 
         </div>
 
-        <button className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg">
-          Submit Request
-        </button>
+      )}
 
-      </div>
-
-      {/* Advance History Table */}
+      {/* Advance History */}
 
       <div className="bg-white rounded-xl shadow p-5">
 
@@ -147,89 +265,64 @@ const LabourAdvanceHistory = () => {
 
             <tbody>
 
-              <tr className="border-b">
+              {advances.length > 0 ? (
 
-                <td className="p-3">
-                  ADV001
-                </td>
+                advances.map((item, index) => (
 
-                <td className="p-3">
-                  ₹2,000
-                </td>
+                  <tr
+                    key={index}
+                    className="border-b"
+                  >
 
-                <td className="p-3">
-                  12-06-2026
-                </td>
+                    <td className="p-3">
+                      {item.requestId}
+                    </td>
 
-                <td className="p-3">
-                  Family Expense
-                </td>
+                    <td className="p-3">
+                      ₹{item.amount}
+                    </td>
 
-                <td className="p-3">
+                    <td className="p-3">
+                      {item.date}
+                    </td>
 
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Approved
-                  </span>
+                    <td className="p-3">
+                      {item.reason}
+                    </td>
 
-                </td>
+                    <td className="p-3">
 
-              </tr>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          item.status === "Approved"
+                            ? "bg-green-100 text-green-700"
+                            : item.status === "Rejected"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
 
-              <tr className="border-b">
+                    </td>
 
-                <td className="p-3">
-                  ADV002
-                </td>
+                  </tr>
 
-                <td className="p-3">
-                  ₹1,500
-                </td>
+                ))
 
-                <td className="p-3">
-                  15-06-2026
-                </td>
+              ) : (
+                               <tr>
 
-                <td className="p-3">
-                  Medical Expense
-                </td>
+                  <td
+                    colSpan="5"
+                    className="text-center py-6 text-gray-500"
+                  >
+                    No Advance Records Found
+                  </td>
 
-                <td className="p-3">
+                </tr>
 
-                  <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                    Pending
-                  </span>
-
-                </td>
-
-              </tr>
-
-              <tr>
-
-                <td className="p-3">
-                  ADV003
-                </td>
-
-                <td className="p-3">
-                  ₹3,000
-                </td>
-
-                <td className="p-3">
-                  01-05-2026
-                </td>
-
-                <td className="p-3">
-                  Personal Work
-                </td>
-
-                <td className="p-3">
-
-                  <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
-                    Rejected
-                  </span>
-
-                </td>
-
-              </tr>
+              )}
 
             </tbody>
 
@@ -240,7 +333,9 @@ const LabourAdvanceHistory = () => {
       </div>
 
     </LabourLayout>
+
   );
+
 };
 
-export default LabourAdvanceHistory;
+export default LabourAdvanceHistory; 

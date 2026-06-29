@@ -26,7 +26,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            125
+            0
           </h1>
 
         </div>
@@ -38,7 +38,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            118
+            0
           </h1>
 
         </div>
@@ -50,7 +50,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            7
+            0
           </h1>
 
         </div>
@@ -62,7 +62,7 @@ const Dashboard = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+            0
           </h1>
 
         </div>
@@ -138,7 +138,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold">
-                ₹2,50,000
+                ₹0
               </span>
 
             </div>
@@ -150,7 +150,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold">
-                ₹45,000
+                ₹0
               </span>
 
             </div>
@@ -162,7 +162,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold text-red-600">
-                ₹35,000
+                ₹0
               </span>
 
             </div>
@@ -174,7 +174,7 @@ const Dashboard = () => {
               </span>
 
               <span className="font-bold text-green-600">
-                ₹2,15,000
+                ₹0
               </span>
 
             </div>

@@ -1,8 +1,22 @@
-
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 
 const LabourMyProduction = () => {
+
+  const [searchMonth, setSearchMonth] = useState("");
+
+  const [productions] = useState([]);
+
+  const filteredProductions = productions.filter((item) => {
+
+    if (!searchMonth) return true;
+
+    return item.date.startsWith(searchMonth);
+
+  });
+
   return (
+
     <LabourLayout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -20,7 +34,15 @@ const LabourMyProduction = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            50
+
+            {
+              productions.reduce(
+                (total, item) =>
+                  total + Number(item.quantity || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
@@ -32,7 +54,15 @@ const LabourMyProduction = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+
+            {
+              productions.reduce(
+                (total, item) =>
+                  total + Number(item.quantity || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
@@ -44,7 +74,17 @@ const LabourMyProduction = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹12,500
+
+            ₹{
+              productions.reduce(
+                (total, item) =>
+                  total +
+                  Number(item.quantity || 0) *
+                  Number(item.rate || 0),
+                0
+              )
+            }
+
           </h1>
 
         </div>
@@ -56,19 +96,30 @@ const LabourMyProduction = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            4
+
+            {
+              [...new Set(
+                productions.map(
+                  (item) => item.workType
+                )
+              )].length
+            }
+
           </h1>
 
         </div>
 
       </div>
-
-      {/* Filter */}
+            {/* Filter */}
 
       <div className="bg-white rounded-xl shadow p-5 mb-6">
 
         <input
           type="month"
+          value={searchMonth}
+          onChange={(e) =>
+            setSearchMonth(e.target.value)
+          }
           className="w-full border p-3 rounded-lg"
         />
 
@@ -116,53 +167,52 @@ const LabourMyProduction = () => {
 
             <tbody>
 
-              <tr className="border-b">
+              {filteredProductions.length > 0 ? (
 
-                <td className="p-3">
-                  12-06-2026
-                </td>
+                filteredProductions.map((item, index) => (
 
-                <td className="p-3">
-                  Wallet Stitching
-                </td>
+                  <tr
+                    key={index}
+                    className="border-b"
+                  >
 
-                <td className="p-3">
-                  50
-                </td>
+                    <td className="p-3">
+                      {item.date}
+                    </td>
 
-                <td className="p-3">
-                  ₹10
-                </td>
+                    <td className="p-3">
+                      {item.workType}
+                    </td>
 
-                <td className="p-3 font-semibold">
-                  ₹500
-                </td>
+                    <td className="p-3">
+                      {item.quantity}
+                    </td>
 
-              </tr>
+                    <td className="p-3">
+                      ₹{item.rate}
+                    </td>
 
-              <tr>
+                    <td className="p-3 font-semibold">
+                      ₹{Number(item.quantity) * Number(item.rate)}
+                    </td>
 
-                <td className="p-3">
-                  11-06-2026
-                </td>
+                  </tr>
 
-                <td className="p-3">
-                  Belt Stitching
-                </td>
+                ))
 
-                <td className="p-3">
-                  40
-                </td>
+              ) : (
+                             <tr>
 
-                <td className="p-3">
-                  ₹12
-                </td>
+                  <td
+                    colSpan="5"
+                    className="text-center py-6 text-gray-500"
+                  >
+                    No Production Records Found
+                  </td>
 
-                <td className="p-3 font-semibold">
-                  ₹480
-                </td>
+                </tr>
 
-              </tr>
+              )}
 
             </tbody>
 
@@ -173,7 +223,9 @@ const LabourMyProduction = () => {
       </div>
 
     </LabourLayout>
+
   );
+
 };
 
-export default LabourMyProduction;
+export default LabourMyProduction;   

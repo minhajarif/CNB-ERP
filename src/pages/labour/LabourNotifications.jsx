@@ -1,8 +1,39 @@
-
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 
 const LabourNotifications = () => {
+
+  const [notifications, setNotifications] = useState([]);
+
+  const [search, setSearch] = useState("");
+
+  const filteredNotifications = notifications.filter((item) =>
+    item.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
+
+  const handleMarkAllRead = () => {
+
+    setNotifications(
+      notifications.map((item) => ({
+        ...item,
+        status: "Read",
+      }))
+    );
+
+  };
+
+  const handleDeleteNotification = (index) => {
+
+    setNotifications(
+      notifications.filter((_, i) => i !== index)
+    );
+
+  };
+
   return (
+
     <LabourLayout>
 
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
@@ -11,7 +42,10 @@ const LabourNotifications = () => {
           Notifications
         </h1>
 
-        <button className="bg-blue-700 text-white px-5 py-3 rounded-lg">
+        <button
+          onClick={handleMarkAllRead}
+          className="bg-blue-700 text-white px-5 py-3 rounded-lg"
+        >
           Mark All Read
         </button>
 
@@ -28,7 +62,7 @@ const LabourNotifications = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            18
+            {notifications.length}
           </h1>
 
         </div>
@@ -40,7 +74,11 @@ const LabourNotifications = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            12
+            {
+              notifications.filter(
+                (item) => item.status === "Read"
+              ).length
+            }
           </h1>
 
         </div>
@@ -52,7 +90,11 @@ const LabourNotifications = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            6
+            {
+              notifications.filter(
+                (item) => item.status === "Unread"
+              ).length
+            }
           </h1>
 
         </div>
@@ -64,10 +106,25 @@ const LabourNotifications = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            3
+            {notifications.length}
           </h1>
 
         </div>
+
+      </div>
+            {/* Search */}
+
+      <div className="bg-white rounded-xl shadow p-5 mb-6">
+
+        <input
+          type="text"
+          placeholder="Search Notifications..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          className="w-full border p-3 rounded-lg"
+        />
 
       </div>
 
@@ -81,76 +138,98 @@ const LabourNotifications = () => {
 
         <div className="space-y-4">
 
-          <div className="border rounded-lg p-4 bg-blue-50">
+          {filteredNotifications.length > 0 ? (
 
-            <h3 className="font-semibold">
-              Salary Credited
-            </h3>
+            filteredNotifications.map((item, index) => (
 
-            <p className="text-gray-600 text-sm mt-1">
-              Your salary for June 2026 has been credited successfully.
-            </p>
+              <div
+                key={index}
+                className={`border rounded-lg p-4 flex justify-between items-center ${
+                  item.status === "Unread"
+                    ? "bg-blue-50"
+                    : "bg-white"
+                }`}
+              >
 
-            <p className="text-xs text-gray-500 mt-2">
-              2 Hours Ago
-            </p>
+                <div>
 
-          </div>
+                  <h3 className="font-semibold">
+                    {item.title}
+                  </h3>
 
-          <div className="border rounded-lg p-4">
+                  <p className="text-gray-600 text-sm mt-1">
+                    {item.message}
+                  </p>
 
-            <h3 className="font-semibold">
-              Advance Request Approved
-            </h3>
+                  <p className="text-xs text-gray-500 mt-2">
+                    {item.time}
+                  </p>
 
-            <p className="text-gray-600 text-sm mt-1">
-              Your advance request of ₹2,000 has been approved.
-            </p>
+                  <span
+                    className={`inline-block mt-2 px-3 py-1 rounded-full text-sm ${
+                      item.status === "Read"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
 
-            <p className="text-xs text-gray-500 mt-2">
-              Yesterday
-            </p>
+                </div>
 
-          </div>
+                <div className="flex gap-2">
 
-          <div className="border rounded-lg p-4">
+                  {item.status === "Unread" && (
 
-            <h3 className="font-semibold">
-              Attendance Updated
-            </h3>
+                    <button
+                      onClick={() => {
 
-            <p className="text-gray-600 text-sm mt-1">
-              Today's attendance marked successfully.
-            </p>
+                        const updated = [...notifications];
 
-            <p className="text-xs text-gray-500 mt-2">
-              2 Days Ago
-            </p>
+                        updated[index].status = "Read";
 
-          </div>
+                        setNotifications(updated);
 
-          <div className="border rounded-lg p-4">
+                      }}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    >
+                      Read
+                    </button>
 
-            <h3 className="font-semibold">
-              Production Entry Added
-            </h3>
+                  )}
 
-            <p className="text-gray-600 text-sm mt-1">
-              Production record updated successfully.
-            </p>
+                  <button
+                    onClick={() =>
+                      handleDeleteNotification(index)
+                    }
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                  >
+                    Delete
+                  </button>
 
-            <p className="text-xs text-gray-500 mt-2">
-              3 Days Ago
-            </p>
+                </div>
 
-          </div>
+              </div>
+
+            ))
+
+          ) : (
+                        <div className="text-center py-10 text-gray-500">
+
+              No Notifications Found
+
+            </div>
+
+          )}
 
         </div>
 
       </div>
 
     </LabourLayout>
+
   );
+
 };
 
 export default LabourNotifications;

@@ -1,8 +1,24 @@
-
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 
 const LabourMySalary = () => {
+
+  const [salaryHistory] = useState([]);
+
+  const grossSalary = salaryHistory.reduce(
+    (total, item) => total + Number(item.grossSalary || 0),
+    0
+  );
+
+  const advanceTaken = salaryHistory.reduce(
+    (total, item) => total + Number(item.advance || 0),
+    0
+  );
+
+  const netSalary = grossSalary - advanceTaken;
+
   return (
+
     <LabourLayout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -20,7 +36,7 @@ const LabourMySalary = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹12,500
+            ₹{grossSalary}
           </h1>
 
         </div>
@@ -32,7 +48,7 @@ const LabourMySalary = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹2,000
+            ₹{advanceTaken}
           </h1>
 
         </div>
@@ -44,7 +60,7 @@ const LabourMySalary = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹10,500
+            ₹{netSalary}
           </h1>
 
         </div>
@@ -56,14 +72,13 @@ const LabourMySalary = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            12
+            {salaryHistory.length}
           </h1>
 
         </div>
 
       </div>
-
-      {/* Salary Details */}
+            {/* Salary Details */}
 
       <div className="bg-white rounded-xl shadow p-5 mb-6">
 
@@ -74,18 +89,39 @@ const LabourMySalary = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           <div className="flex justify-between border p-4 rounded-lg">
-            <span>Gross Salary</span>
-            <span className="font-semibold">₹12,500</span>
+
+            <span>
+              Gross Salary
+            </span>
+
+            <span className="font-semibold">
+              ₹{grossSalary}
+            </span>
+
           </div>
 
           <div className="flex justify-between border p-4 rounded-lg">
-            <span>Advance Deduction</span>
-            <span className="font-semibold text-red-600">₹2,000</span>
+
+            <span>
+              Advance Deduction
+            </span>
+
+            <span className="font-semibold text-red-600">
+              ₹{advanceTaken}
+            </span>
+
           </div>
 
           <div className="flex justify-between border p-4 rounded-lg md:col-span-2">
-            <span>Net Salary</span>
-            <span className="font-bold text-green-600">₹10,500</span>
+
+            <span>
+              Net Salary
+            </span>
+
+            <span className="font-bold text-green-600">
+              ₹{netSalary}
+            </span>
+
           </div>
 
         </div>
@@ -134,61 +170,62 @@ const LabourMySalary = () => {
 
             <tbody>
 
-              <tr className="border-b">
+              {salaryHistory.length > 0 ? (
 
-                <td className="p-3">
-                  June 2026
-                </td>
+                salaryHistory.map((item, index) => (
 
-                <td className="p-3">
-                  ₹12,500
-                </td>
+                  <tr
+                    key={index}
+                    className="border-b"
+                  >
 
-                <td className="p-3">
-                  ₹2,000
-                </td>
+                    <td className="p-3">
+                      {item.month}
+                    </td>
 
-                <td className="p-3 font-semibold">
-                  ₹10,500
-                </td>
+                    <td className="p-3">
+                      ₹{item.grossSalary}
+                    </td>
 
-                <td className="p-3">
+                    <td className="p-3">
+                      ₹{item.advance}
+                    </td>
 
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Paid
-                  </span>
+                    <td className="p-3 font-semibold">
+                      ₹{item.netSalary}
+                    </td>
 
-                </td>
+                    <td className="p-3">
 
-              </tr>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          item.status === "Paid"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
 
-              <tr>
+                    </td>
 
-                <td className="p-3">
-                  May 2026
-                </td>
+                  </tr>
 
-                <td className="p-3">
-                  ₹11,800
-                </td>
+                ))
 
-                <td className="p-3">
-                  ₹1,500
-                </td>
+              ) : (
+                              <tr>
 
-                <td className="p-3 font-semibold">
-                  ₹10,300
-                </td>
+                  <td
+                    colSpan="5"
+                    className="text-center py-6 text-gray-500"
+                  >
+                    No Salary Records Found
+                  </td>
 
-                <td className="p-3">
+                </tr>
 
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Paid
-                  </span>
-
-                </td>
-
-              </tr>
+              )}
 
             </tbody>
 
@@ -199,7 +236,9 @@ const LabourMySalary = () => {
       </div>
 
     </LabourLayout>
+
   );
+
 };
 
-export default LabourMySalary;
+export default LabourMySalary;  

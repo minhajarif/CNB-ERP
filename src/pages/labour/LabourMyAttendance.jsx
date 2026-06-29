@@ -1,8 +1,22 @@
-
+import { useState } from "react";
 import LabourLayout from "../../layouts/LabourLayout";
 
 const LabourMyAttendance = () => {
+
+  const [attendance] = useState([]);
+
+  const [searchMonth, setSearchMonth] = useState("");
+
+  const filteredAttendance = attendance.filter((item) => {
+
+    if (!searchMonth) return true;
+
+    return item.date.startsWith(searchMonth);
+
+  });
+
   return (
+
     <LabourLayout>
 
       <h1 className="text-3xl font-bold mb-6">
@@ -20,7 +34,13 @@ const LabourMyAttendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            24
+
+            {
+              attendance.filter(
+                (item) => item.status === "Present"
+              ).length
+            }
+
           </h1>
 
         </div>
@@ -32,7 +52,13 @@ const LabourMyAttendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            2
+
+            {
+              attendance.filter(
+                (item) => item.status === "Absent"
+              ).length
+            }
+
           </h1>
 
         </div>
@@ -44,7 +70,13 @@ const LabourMyAttendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            3
+
+            {
+              attendance.filter(
+                (item) => item.status === "Late"
+              ).length
+            }
+
           </h1>
 
         </div>
@@ -56,19 +88,22 @@ const LabourMyAttendance = () => {
           </h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            26
+            {attendance.length}
           </h1>
 
         </div>
 
       </div>
-
-      {/* Search */}
+            {/* Search */}
 
       <div className="bg-white rounded-xl shadow p-5 mb-6">
 
         <input
           type="month"
+          value={searchMonth}
+          onChange={(e) =>
+            setSearchMonth(e.target.value)
+          }
           className="w-full border p-3 rounded-lg"
         />
 
@@ -116,61 +151,64 @@ const LabourMyAttendance = () => {
 
             <tbody>
 
-              <tr className="border-b">
+              {filteredAttendance.length > 0 ? (
 
-                <td className="p-3">
-                  12-06-2026
-                </td>
+                filteredAttendance.map((item, index) => (
 
-                <td className="p-3">
-                  09:00 AM
-                </td>
+                  <tr
+                    key={index}
+                    className="border-b"
+                  >
 
-                <td className="p-3">
-                  06:00 PM
-                </td>
+                    <td className="p-3">
+                      {item.date}
+                    </td>
 
-                <td className="p-3">
-                  9 Hours
-                </td>
+                    <td className="p-3">
+                      {item.loginTime}
+                    </td>
 
-                <td className="p-3">
+                    <td className="p-3">
+                      {item.logoutTime}
+                    </td>
 
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Present
-                  </span>
+                    <td className="p-3">
+                      {item.workingHours}
+                    </td>
 
-                </td>
+                    <td className="p-3">
 
-              </tr>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          item.status === "Present"
+                            ? "bg-green-100 text-green-700"
+                            : item.status === "Absent"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
 
-              <tr>
+                    </td>
 
-                <td className="p-3">
-                  11-06-2026
-                </td>
+                  </tr>
 
-                <td className="p-3">
-                  09:15 AM
-                </td>
+                ))
 
-                <td className="p-3">
-                  06:00 PM
-                </td>
+              ) : (
+                              <tr>
 
-                <td className="p-3">
-                  8.5 Hours
-                </td>
+                  <td
+                    colSpan="5"
+                    className="text-center py-6 text-gray-500"
+                  >
+                    No Attendance Records Found
+                  </td>
 
-                <td className="p-3">
+                </tr>
 
-                  <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                    Late
-                  </span>
-
-                </td>
-
-              </tr>
+              )}
 
             </tbody>
 
@@ -181,7 +219,9 @@ const LabourMyAttendance = () => {
       </div>
 
     </LabourLayout>
+
   );
+
 };
 
-export default LabourMyAttendance;
+export default LabourMyAttendance;  

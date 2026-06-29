@@ -1,116 +1,285 @@
+import { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 
-const Production = () => {
+const AdvanceManagement = () => {
+
+  const [advances, setAdvances] = useState([]);
+
+  const [editIndex, setEditIndex] = useState(null);
+
+  const [search, setSearch] = useState("");
+
+  const [showForm, setShowForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    labour: "",
+    department: "",
+    amount: "",
+    reason: "",
+    date: "",
+    status: "Pending",
+  });
+
+  const handleSaveAdvance = () => {
+
+    if (
+      !formData.labour ||
+      !formData.department ||
+      !formData.amount
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    if (editIndex !== null) {
+
+      const updated = [...advances];
+
+      updated[editIndex] = formData;
+
+      setAdvances(updated);
+
+      setEditIndex(null);
+
+    } else {
+
+      setAdvances([
+        ...advances,
+        formData,
+      ]);
+
+    }
+
+    setFormData({
+      labour: "",
+      department: "",
+      amount: "",
+      reason: "",
+      date: "",
+      status: "Pending",
+    });
+
+    setShowForm(false);
+
+  };
+
+  const handleDeleteAdvance = (index) => {
+
+    setAdvances(
+      advances.filter((_, i) => i !== index)
+    );
+
+  };
+
+  const handleEditAdvance = (index) => {
+
+    setFormData(advances[index]);
+
+    setEditIndex(index);
+
+    setShowForm(true);
+
+  };
+
+  const filteredAdvances = advances.filter((item) =>
+    item.labour.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <MainLayout>
+           {/* Header */}
 
-      <h1 className="text-3xl font-bold mb-6">
-        Production Management
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+
+        <h1 className="text-3xl font-bold">
+          Advance Management
+        </h1>
+
+        <button
+          onClick={() => {
+            setShowForm(true);
+            setEditIndex(null);
+            setFormData({
+              labour: "",
+              department: "",
+              amount: "",
+              reason: "",
+              date: "",
+              status: "Pending",
+            });
+          }}
+          className="bg-blue-700 text-white px-5 py-3 rounded-xl"
+        >
+          + Add Advance
+        </button>
+
+      </div>
 
       {/* Summary Cards */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
         <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Today's Production
-          </h3>
+
+          <h3>Total Advances</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            850
+            {advances.length}
           </h1>
+
         </div>
 
         <div className="bg-green-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Total Amount
-          </h3>
+
+          <h3>Total Amount</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹18,500
+            ₹{
+              advances.reduce(
+                (total, item) =>
+                  total + Number(item.amount || 0),
+                0
+              )
+            }
           </h1>
+
+        </div>
+
+        <div className="bg-yellow-500 text-white p-5 rounded-xl shadow">
+
+          <h3>Pending</h3>
+
+          <h1 className="text-4xl font-bold mt-2">
+            {
+              advances.filter(
+                (item) => item.status === "Pending"
+              ).length
+            }
+          </h1>
+
         </div>
 
         <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Active Workers
-          </h3>
+
+          <h3>Approved</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            72
+            {
+              advances.filter(
+                (item) => item.status === "Approved"
+              ).length
+            }
           </h1>
-        </div>
 
-        <div className="bg-red-500 text-white p-5 rounded-xl shadow">
-          <h3 className="text-lg">
-            Monthly Production
-          </h3>
-
-          <h1 className="text-4xl font-bold mt-2">
-            18,500
-          </h1>
         </div>
 
       </div>
 
-      {/* Production Entry Form */}
+      {showForm && (
 
       <div className="bg-white rounded-xl shadow p-5 mb-6">
 
         <h2 className="text-xl font-semibold mb-4">
-          Add Production Entry
+
+          {editIndex !== null
+            ? "Edit Advance"
+            : "Add Advance"}
+
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-          <select className="border p-3 rounded-lg">
-            <option>Select Labour</option>
-            <option>Rahman</option>
-            <option>Ahmed</option>
-          </select>
-
-          <select className="border p-3 rounded-lg">
-            <option>Select Department</option>
-            <option>Stitching</option>
-            <option>Packing</option>
-          </select>
+                    <input
+            type="text"
+            placeholder="Labour Name"
+            value={formData.labour}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                labour: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
           <input
             type="text"
-            placeholder="Work Type"
+            placeholder="Department"
+            value={formData.department}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                department: e.target.value,
+              })
+            }
             className="border p-3 rounded-lg"
           />
 
           <input
             type="number"
-            placeholder="Quantity"
+            placeholder="Advance Amount"
+            value={formData.amount}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                amount: e.target.value,
+              })
+            }
             className="border p-3 rounded-lg"
           />
 
           <input
-            type="number"
-            placeholder="Piece Rate"
+            type="text"
+            placeholder="Reason"
+            value={formData.reason}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                reason: e.target.value,
+              })
+            }
             className="border p-3 rounded-lg"
           />
 
           <input
             type="date"
+            value={formData.date}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                date: e.target.value,
+              })
+            }
             className="border p-3 rounded-lg"
           />
 
-          <input
-            type="file"
-            className="border p-3 rounded-lg md:col-span-2"
-          />
+          <select
+            value={formData.status}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                status: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          >
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+          </select>
 
         </div>
 
-        <button className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg">
-          Save Production
+        <button
+          onClick={handleSaveAdvance}
+          className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg"
+        >
+          {editIndex !== null
+            ? "Update Advance"
+            : "Save Advance"}
         </button>
 
       </div>
+
+      )}
 
       {/* Search */}
 
@@ -118,18 +287,22 @@ const Production = () => {
 
         <input
           type="text"
-          placeholder="Search Production..."
+          placeholder="Search Advance..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
           className="w-full border p-3 rounded-lg"
         />
 
       </div>
 
-      {/* Production History */}
+      {/* Advance Table */}
 
       <div className="bg-white rounded-xl shadow p-5">
 
         <h2 className="text-xl font-semibold mb-4">
-          Production History
+          Advance History
         </h2>
 
         <div className="overflow-x-auto">
@@ -140,147 +313,100 @@ const Production = () => {
 
               <tr className="border-b">
 
-                <th className="p-3 text-left">
-                  Labour
-                </th>
-
-                <th className="p-3 text-left">
-                  Department
-                </th>
-
-                <th className="p-3 text-left">
-                  Work Type
-                </th>
-
-                <th className="p-3 text-left">
-                  Quantity
-                </th>
-
-                <th className="p-3 text-left">
-                  Rate
-                </th>
-
-                <th className="p-3 text-left">
-                  Amount
-                </th>
-
-                <th className="p-3 text-left">
-                  Date
-                </th>
-
-                <th className="p-3 text-left">
-                  Action
-                </th>
+                <th className="p-3 text-left">Labour</th>
+                <th className="p-3 text-left">Department</th>
+                <th className="p-3 text-left">Amount</th>
+                <th className="p-3 text-left">Reason</th>
+                <th className="p-3 text-left">Date</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">Action</th>
 
               </tr>
 
             </thead>
 
             <tbody>
+                            {filteredAdvances.map((item, index) => (
 
-              <tr className="border-b">
+                <tr
+                  key={index}
+                  className="border-b"
+                >
 
-                <td className="p-3">
-                  Rahman
-                </td>
+                  <td className="p-3">
+                    {item.labour}
+                  </td>
 
-                <td className="p-3">
-                  Stitching
-                </td>
+                  <td className="p-3">
+                    {item.department}
+                  </td>
 
-                <td className="p-3">
-                  Wallet
-                </td>
+                  <td className="p-3">
+                    ₹{item.amount}
+                  </td>
 
-                <td className="p-3">
-                  50
-                </td>
+                  <td className="p-3">
+                    {item.reason}
+                  </td>
 
-                <td className="p-3">
-                  ₹10
-                </td>
+                  <td className="p-3">
+                    {item.date}
+                  </td>
 
-                <td className="p-3">
-                  ₹500
-                </td>
+                  <td className="p-3">
 
-                <td className="p-3">
-                  12-06-2026
-                </td>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        item.status === "Approved"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
 
-                <td className="p-3">
+                  </td>
 
-                  <div className="flex gap-2">
+                  <td className="p-3">
 
-                    <button className="bg-blue-600 text-white px-3 py-2 rounded-lg">
-                      View
-                    </button>
+                    <div className="flex gap-2">
 
-                    <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
-                      Edit
-                    </button>
+                      <button
+                        onClick={() =>
+                          handleEditAdvance(index)
+                        }
+                        className="bg-yellow-500 text-white px-3 py-2 rounded-lg"
+                      >
+                        Edit
+                      </button>
 
-                    <button className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                      Delete
-                    </button>
+                      <button
+                        onClick={() =>
+                          handleDeleteAdvance(index)
+                        }
+                        className="bg-red-600 text-white px-3 py-2 rounded-lg"
+                      >
+                        Delete
+                      </button>
 
-                  </div>
+                      <button
+                        onClick={() => {
+                          const updated = [...advances];
+                          updated[index].status = "Approved";
+                          setAdvances(updated);
+                        }}
+                        className="bg-green-600 text-white px-3 py-2 rounded-lg"
+                      >
+                        Approve
+                      </button>
 
-                </td>
+                    </div>
 
-              </tr>
+                  </td>
 
-              <tr>
+                </tr>
 
-                <td className="p-3">
-                  Ahmed
-                </td>
-
-                <td className="p-3">
-                  Packing
-                </td>
-
-                <td className="p-3">
-                  Box Packing
-                </td>
-
-                <td className="p-3">
-                  100
-                </td>
-
-                <td className="p-3">
-                  ₹5
-                </td>
-
-                <td className="p-3">
-                  ₹500
-                </td>
-
-                <td className="p-3">
-                  12-06-2026
-                </td>
-
-                <td className="p-3">
-
-                  <div className="flex gap-2">
-
-                    <button className="bg-blue-600 text-white px-3 py-2 rounded-lg">
-                      View
-                    </button>
-
-                    <button className="bg-yellow-500 text-white px-3 py-2 rounded-lg">
-                      Edit
-                    </button>
-
-                    <button className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                      Delete
-                    </button>
-
-                  </div>
-
-                </td>
-
-              </tr>
+              ))}
 
             </tbody>
 
@@ -291,7 +417,9 @@ const Production = () => {
       </div>
 
     </MainLayout>
+
   );
+
 };
 
-export default Production;
+export default AdvanceManagement;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 
 import AttendanceChart from "../../components/charts/AttendanceChart";
@@ -5,10 +6,91 @@ import ProductionChart from "../../components/charts/ProductionChart";
 import SalaryChart from "../../components/charts/SalaryChart";
 
 const Reports = () => {
+
+  const [reports, setReports] = useState([]);
+
+  const [editIndex, setEditIndex] = useState(null);
+
+  const [search, setSearch] = useState("");
+
+  const [showForm, setShowForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    reportType: "",
+    department: "",
+    date: "",
+    records: "",
+    status: "Ready",
+  });
+
+  const handleSaveReport = () => {
+
+    if (
+      !formData.reportType ||
+      !formData.department
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    if (editIndex !== null) {
+
+      const updated = [...reports];
+
+      updated[editIndex] = formData;
+
+      setReports(updated);
+
+      setEditIndex(null);
+
+    } else {
+
+      setReports([
+        ...reports,
+        formData,
+      ]);
+
+    }
+
+    setFormData({
+      reportType: "",
+      department: "",
+      date: "",
+      records: "",
+      status: "Ready",
+    });
+
+    setShowForm(false);
+
+  };
+
+  const handleDeleteReport = (index) => {
+
+    setReports(
+      reports.filter((_, i) => i !== index)
+    );
+
+  };
+
+  const handleEditReport = (index) => {
+
+    setFormData(reports[index]);
+
+    setEditIndex(index);
+
+    setShowForm(true);
+
+  };
+
+  const filteredReports = reports.filter((item) =>
+    item.reportType
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
+
   return (
     <MainLayout>
-
-      {/* Header */}
+           {/* Header */}
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
@@ -17,6 +99,23 @@ const Reports = () => {
         </h1>
 
         <div className="flex flex-wrap gap-2">
+
+          <button
+            onClick={() => {
+              setShowForm(true);
+              setEditIndex(null);
+              setFormData({
+                reportType: "",
+                department: "",
+                date: "",
+                records: "",
+                status: "Ready",
+              });
+            }}
+            className="bg-blue-700 text-white px-4 py-2 rounded-lg"
+          >
+            + Add Report
+          </button>
 
           <button className="bg-red-600 text-white px-4 py-2 rounded-lg">
             PDF
@@ -40,55 +139,61 @@ const Reports = () => {
 
         <div className="bg-blue-600 text-white p-5 rounded-xl shadow">
 
-          <h3 className="text-lg">
-            Total Production
-          </h3>
+          <h3>Total Reports</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            8,500
+            {reports.length}
           </h1>
 
         </div>
 
         <div className="bg-green-600 text-white p-5 rounded-xl shadow">
 
-          <h3 className="text-lg">
-            Total Salary
-          </h3>
+          <h3>Ready Reports</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹2,50,000
+            {
+              reports.filter(
+                (item) => item.status === "Ready"
+              ).length
+            }
           </h1>
 
         </div>
 
         <div className="bg-yellow-500 text-white p-5 rounded-xl shadow">
 
-          <h3 className="text-lg">
-            Total Advance
-          </h3>
+          <h3>Generated</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            ₹45,000
+            {
+              reports.filter(
+                (item) => item.status === "Generated"
+              ).length
+            }
           </h1>
 
         </div>
 
         <div className="bg-purple-600 text-white p-5 rounded-xl shadow">
 
-          <h3 className="text-lg">
-            Total Labour
-          </h3>
+          <h3>Total Records</h3>
 
           <h1 className="text-4xl font-bold mt-2">
-            125
+            {
+              reports.reduce(
+                (total, item) =>
+                  total + Number(item.records || 0),
+                0
+              )
+            }
           </h1>
 
         </div>
 
       </div>
 
-      {/* Analytics Charts */}
+      {/* Charts */}
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
 
@@ -100,37 +205,113 @@ const Reports = () => {
 
       </div>
 
-      {/* Filters */}
+      {showForm && (
 
-      <div className="bg-white rounded-xl shadow p-5 mb-8">
+      <div className="bg-white rounded-xl shadow p-5 mb-6">
 
         <h2 className="text-xl font-semibold mb-4">
-          Report Filters
+
+          {editIndex !== null
+            ? "Edit Report"
+            : "Add Report"}
+
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <input
+            type="text"
+            placeholder="Report Type"
+            value={formData.reportType}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                reportType: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-          <button className="bg-blue-600 text-white py-3 rounded-lg">
-            Today
-          </button>
+          <input
+            type="text"
+            placeholder="Department"
+            value={formData.department}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                department: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-          <button className="border py-3 rounded-lg">
-            Week
-          </button>
+          <input
+            type="date"
+            value={formData.date}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                date: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-          <button className="border py-3 rounded-lg">
-            Month
-          </button>
+          <input
+            type="number"
+            placeholder="Records"
+            value={formData.records}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                records: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          />
 
-          <button className="border py-3 rounded-lg">
-            Year
-          </button>
-
-          <button className="border py-3 rounded-lg">
-            Custom Range
-          </button>
+          <select
+            value={formData.status}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                status: e.target.value,
+              })
+            }
+            className="border p-3 rounded-lg"
+          >
+            <option value="Ready">Ready</option>
+            <option value="Generated">Generated</option>
+            <option value="Active">Active</option>
+          </select>
 
         </div>
+
+        <button
+          onClick={handleSaveReport}
+          className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg"
+        >
+          {editIndex !== null
+            ? "Update Report"
+            : "Save Report"}
+        </button>
+
+      </div>
+
+      )}
+
+      {/* Search */}
+
+      <div className="bg-white rounded-xl shadow p-5 mb-6">
+
+        <input
+          type="text"
+          placeholder="Search Report..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          className="w-full border p-3 rounded-lg"
+        />
 
       </div>
 
@@ -150,179 +331,92 @@ const Reports = () => {
 
               <tr className="border-b">
 
-                <th className="p-3 text-left">
-                  Report Type
-                </th>
-
-                <th className="p-3 text-left">
-                  Department
-                </th>
-
-                <th className="p-3 text-left">
-                  Date
-                </th>
-
-                <th className="p-3 text-left">
-                  Records
-                </th>
-
-                <th className="p-3 text-left">
-                  Status
-                </th>
-
-                <th className="p-3 text-left">
-                  Action
-                </th>
+                <th className="p-3 text-left">Report Type</th>
+                <th className="p-3 text-left">Department</th>
+                <th className="p-3 text-left">Date</th>
+                <th className="p-3 text-left">Records</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">Action</th>
 
               </tr>
 
             </thead>
 
             <tbody>
+                           {filteredReports.map((item, index) => (
 
-              <tr className="border-b">
+                <tr
+                  key={index}
+                  className="border-b"
+                >
 
-                <td className="p-3">
-                  Attendance Report
-                </td>
+                  <td className="p-3">
+                    {item.reportType}
+                  </td>
 
-                <td className="p-3">
-                  Stitching
-                </td>
+                  <td className="p-3">
+                    {item.department}
+                  </td>
 
-                <td className="p-3">
-                  12-06-2026
-                </td>
+                  <td className="p-3">
+                    {item.date}
+                  </td>
 
-                <td className="p-3">
-                  125
-                </td>
+                  <td className="p-3">
+                    {item.records}
+                  </td>
 
-                <td className="p-3">
+                  <td className="p-3">
 
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Ready
-                  </span>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        item.status === "Ready"
+                          ? "bg-green-100 text-green-700"
+                          : item.status === "Generated"
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
 
-                </td>
+                  </td>
 
-                <td className="p-3">
+                  <td className="p-3">
 
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                    Download
-                  </button>
+                    <div className="flex gap-2">
 
-                </td>
+                      <button
+                        onClick={() =>
+                          handleEditReport(index)
+                        }
+                        className="bg-yellow-500 text-white px-3 py-2 rounded-lg"
+                      >
+                        Edit
+                      </button>
 
-              </tr>
+                      <button
+                        onClick={() =>
+                          handleDeleteReport(index)
+                        }
+                        className="bg-red-600 text-white px-3 py-2 rounded-lg"
+                      >
+                        Delete
+                      </button>
 
-              <tr className="border-b">
+                      <button
+                        className="bg-blue-600 text-white px-3 py-2 rounded-lg"
+                      >
+                        Download
+                      </button>
 
-                <td className="p-3">
-                  Production Report
-                </td>
+                    </div>
 
-                <td className="p-3">
-                  Packing
-                </td>
+                  </td>
 
-                <td className="p-3">
-                  June 2026
-                </td>
+                </tr>
 
-                <td className="p-3">
-                  8,500
-                </td>
-
-                <td className="p-3">
-
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Ready
-                  </span>
-
-                </td>
-
-                <td className="p-3">
-
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                    Download
-                  </button>
-
-                </td>
-
-              </tr>
-
-              <tr className="border-b">
-
-                <td className="p-3">
-                  Salary Report
-                </td>
-
-                <td className="p-3">
-                  All Departments
-                </td>
-
-                <td className="p-3">
-                  June 2026
-                </td>
-
-                <td className="p-3">
-                  ₹2,50,000
-                </td>
-
-                <td className="p-3">
-
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                    Generated
-                  </span>
-
-                </td>
-
-                <td className="p-3">
-
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                    Download
-                  </button>
-
-                </td>
-
-              </tr>
-
-              <tr>
-
-                <td className="p-3">
-                  Advance Report
-                </td>
-
-                <td className="p-3">
-                  All Departments
-                </td>
-
-                <td className="p-3">
-                  June 2026
-                </td>
-
-                <td className="p-3">
-                  ₹45,000
-                </td>
-
-                <td className="p-3">
-
-                  <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                    Active
-                  </span>
-
-                </td>
-
-                <td className="p-3">
-
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                    Download
-                  </button>
-
-                </td>
-
-              </tr>
+              ))}
 
             </tbody>
 
@@ -333,7 +427,9 @@ const Reports = () => {
       </div>
 
     </MainLayout>
+
   );
+
 };
 
-export default Reports;
+export default Reports; 
